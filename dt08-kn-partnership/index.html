@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>K&amp;N x Dusty Times 08 Calendar</title>
+    <link rel="stylesheet" href="https://use.typekit.net/shq4xoc.css" />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        color-scheme: light dark;
+        --bg: #f4f1ea;
+        --surface: #ebe7dd;
+        --raised: #fffaf0;
+        --ink: #121411;
+        --muted: #6f706a;
+        --tertiary: #9a978d;
+        --line: rgba(18, 20, 17, 0.16);
+        --soft: rgba(18, 20, 17, 0.055);
+        --accent: #d84e31;
+        --font:
+          "indivisible", "Indivisible", ui-sans-serif, system-ui, -apple-system,
+          BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #080a09;
+          --surface: #0f1110;
+          --raised: #151715;
+          --ink: #f1f1ec;
+          --muted: #8f8f8a;
+          --tertiary: #5f625e;
+          --line: rgba(241, 241, 236, 0.16);
+          --soft: rgba(241, 241, 236, 0.06);
+          --accent: #e04f2f;
+        }
+      }
+
+      html {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--font);
+        letter-spacing: 0;
+      }
+
+      body {
+        min-height: 100vh;
+        background: var(--bg);
+      }
+
+      button {
+        font: inherit;
+      }
+
+      main {
+        width: min(1440px, calc(100% - 48px));
+        margin: 0 auto;
+        padding: 48px 0 72px;
+      }
+
+      header {
+        display: grid;
+        grid-template-columns: repeat(8, minmax(0, 1fr));
+        gap: 24px;
+        align-items: end;
+        padding-bottom: 36px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .title-block {
+        grid-column: span 5;
+      }
+
+      .intro {
+        grid-column: 6 / span 3;
+        max-width: 58ch;
+      }
+
+      .eyebrow,
+      .label,
+      .weekday,
+      .date-num,
+      .event-date {
+        color: var(--muted);
+        font-size: 0.78rem;
+        font-weight: 500;
+        line-height: 1.25;
+      }
+
+      .eyebrow {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+
+      .eyebrow::before {
+        width: 30px;
+        height: 2px;
+        background: var(--accent);
+        content: "";
+      }
+
+      h1 {
+        max-width: 760px;
+        font-size: 3.25rem;
+        font-weight: 500;
+        line-height: 1.1;
+        letter-spacing: -0.04em;
+      }
+
+      .intro,
+      p {
+        color: var(--muted);
+        font-size: 1rem;
+        line-height: 1.55;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 320px;
+        gap: 36px;
+        align-items: start;
+        margin-top: 36px;
+      }
+
+      .calendar-stack {
+        display: grid;
+        gap: 32px;
+        min-width: 0;
+      }
+
+      .month {
+        min-width: 0;
+        background: var(--raised);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        overflow: hidden;
+      }
+
+      .month h2 {
+        padding: 18px 20px;
+        font-size: 1.45rem;
+        font-weight: 500;
+        line-height: 1.2;
+        letter-spacing: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .weekdays {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        background: var(--soft);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .weekday {
+        padding: 10px;
+        border-right: 1px solid var(--line);
+      }
+
+      .weekday:last-child {
+        border-right: 0;
+      }
+
+      .month-grid {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(112px, 1fr));
+        grid-template-rows: repeat(6, minmax(112px, auto));
+        position: relative;
+        min-width: 820px;
+      }
+
+      .day {
+        min-height: 112px;
+        padding: 9px;
+        background: var(--raised);
+        border-right: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .day:nth-child(7n) {
+        border-right: 0;
+      }
+
+      .day.is-outside {
+        background: var(--surface);
+      }
+
+      .day.is-today {
+        position: relative;
+        box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent), transparent 35%);
+      }
+
+      .day.is-today::after {
+        position: absolute;
+        right: 9px;
+        top: 9px;
+        width: 7px;
+        height: 7px;
+        background: var(--accent);
+        border-radius: 999px;
+        content: "";
+      }
+
+      .date-num {
+        display: block;
+      }
+
+      .event {
+        z-index: 2;
+        align-self: start;
+        justify-self: stretch;
+        min-height: 30px;
+        margin: 34px 6px 0;
+        padding: 6px 9px;
+        overflow: hidden;
+        color: var(--raised);
+        text-align: left;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        background: var(--accent);
+        border: 0;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .event:hover {
+        filter: brightness(0.96);
+      }
+
+      .side {
+        position: sticky;
+        top: 24px;
+        display: grid;
+        gap: 18px;
+      }
+
+      .side h2 {
+        font-size: 1.25rem;
+        font-weight: 500;
+        line-height: 1.2;
+        letter-spacing: 0;
+      }
+
+      .milestone-list {
+        display: grid;
+        gap: 1px;
+        overflow: hidden;
+        background: var(--line);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+      }
+
+      .milestone-link {
+        display: grid;
+        gap: 5px;
+        width: 100%;
+        padding: 13px;
+        color: var(--ink);
+        text-align: left;
+        background: var(--raised);
+        border: 0;
+        cursor: pointer;
+      }
+
+      .milestone-link:hover {
+        background: var(--surface);
+      }
+
+      .milestone-link strong {
+        font-size: 0.96rem;
+        font-weight: 500;
+        line-height: 1.25;
+      }
+
+      dialog {
+        width: min(560px, calc(100% - 32px));
+        margin: auto;
+        padding: 0;
+        color: var(--ink);
+        background: var(--raised);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+      }
+
+      dialog::backdrop {
+        background: rgba(8, 10, 9, 0.42);
+      }
+
+      .modal-inner {
+        display: grid;
+        gap: 14px;
+        padding: 22px;
+      }
+
+      .modal-inner h2 {
+        font-size: 1.45rem;
+        font-weight: 500;
+        line-height: 1.2;
+        letter-spacing: 0;
+      }
+
+      .modal-inner p {
+        color: var(--muted);
+      }
+
+      .close {
+        justify-self: start;
+        min-height: 38px;
+        padding: 0 13px;
+        color: var(--ink);
+        background: transparent;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      @media (max-width: 1040px) {
+        main {
+          width: min(100% - 28px, 1440px);
+          padding-top: 32px;
+        }
+
+        header,
+        .layout {
+          display: grid;
+          grid-template-columns: 1fr;
+        }
+
+        .title-block,
+        .intro {
+          grid-column: auto;
+        }
+
+        h1 {
+          font-size: 2.2rem;
+        }
+
+        .month {
+          overflow-x: auto;
+        }
+
+        .side {
+          position: static;
+        }
+      }
+
+      @media (max-width: 760px) {
+        .layout {
+          margin-top: 28px;
+        }
+
+        .calendar-stack {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div class="title-block">
+          <p class="eyebrow">K&amp;N x Dusty Times 08</p>
+          <h1>Partnership calendar</h1>
+        </div>
+        <p class="intro">
+          Milestones appear as date markers. Click a milestone to view the full
+          description, or use the list for a simple vertical view.
+        </p>
+      </header>
+
+      <div class="layout">
+        <section class="calendar-stack" aria-label="K&N partnership calendar">
+          <article class="month" data-month="2026-05">
+            <h2>May 2026</h2>
+            <div class="weekdays" aria-hidden="true"></div>
+            <div class="month-grid"></div>
+          </article>
+
+          <article class="month" data-month="2026-06">
+            <h2>June 2026</h2>
+            <div class="weekdays" aria-hidden="true"></div>
+            <div class="month-grid"></div>
+          </article>
+
+          <article class="month" data-month="2026-07">
+            <h2>July 2026</h2>
+            <div class="weekdays" aria-hidden="true"></div>
+            <div class="month-grid"></div>
+          </article>
+        </section>
+
+        <aside class="side" aria-label="Milestone list">
+          <div>
+            <h2>Milestones</h2>
+          </div>
+          <div class="milestone-list" id="milestoneList"></div>
+        </aside>
+      </div>
+    </main>
+
+    <dialog id="detailDialog">
+      <div class="modal-inner">
+        <span class="label" id="modalDate"></span>
+        <h2 id="modalTitle"></h2>
+        <p id="modalBody"></p>
+        <button class="close" type="button" id="modalClose">Close</button>
+      </div>
+    </dialog>
+
+    <script>
+      const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      const monthNames = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+
+      const milestones = [
+        {
+          date: "2026-05-18",
+          title: "Partnership contract signed",
+          body:
+            "Partnership agreement signed in order to begin production of the partner feature, photo feature and ad spread for Dusty Times Issue 08.",
+        },
+        {
+          date: "2026-05-22",
+          title: "Receive K&N payment",
+          body: "Payment received in full for work start.",
+        },
+        {
+          date: "2026-05-25",
+          title: "K&N delivers brand kit",
+          body:
+            "K&N to send Dusty Times any and all brand kit assets (i.e., logo files, colors, and fonts or typography guidelines, and art direction standards, etc.)",
+        },
+        {
+          date: "2026-05-29",
+          title: "K&N partner feature concept identified",
+          body:
+            "K&N and Dusty Times to finalize and align on the concept for partner feature.",
+        },
+        {
+          date: "2026-05-29",
+          title: "K&N photo spotlight identified",
+          body:
+            "K&N and Dusty Times to finalize and align on the concept for photo spotlight feature.",
+        },
+        {
+          date: "2026-06-05",
+          title: "K&N ad approved",
+          body:
+            "Dusty Times to acquire final approval from K&N on ad spread creative.",
+        },
+        {
+          date: "2026-06-08",
+          title: "K&N delivers “Thank you” message",
+          body:
+            "K&N to send Dusty Times copy for “thank you” message to be printed inside the VIP box.",
+        },
+        {
+          date: "2026-06-12",
+          title: "VIP packaging approval",
+          body:
+            "K&N and Dusty Times approve the VIP packaging direction before final layout production continues.",
+        },
+        {
+          date: "2026-07-10",
+          title: "K&N feature layouts approved",
+          body:
+            "Dusty Times to acquire approval on all final creative for both the partner feature and the photo spotlight feature.",
+        },
+      ];
+
+      const dialog = document.querySelector("#detailDialog");
+      const modalDate = document.querySelector("#modalDate");
+      const modalTitle = document.querySelector("#modalTitle");
+      const modalBody = document.querySelector("#modalBody");
+      const modalClose = document.querySelector("#modalClose");
+
+      const parseDate = (value) => {
+        const [year, month, day] = value.split("-").map(Number);
+        return new Date(year, month - 1, day);
+      };
+
+      const dateKey = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+      };
+
+      const todayKey = dateKey(new Date());
+
+      const formatDate = (value) => {
+        const date = parseDate(value);
+        return `${monthNames[date.getMonth()]} ${date.getDate()}`;
+      };
+
+      const openDetail = ({ date, title, body }) => {
+        modalDate.textContent = date;
+        modalTitle.textContent = title;
+        modalBody.textContent = body;
+        dialog.showModal();
+      };
+
+      const addButton = (
+        grid,
+        item,
+        className,
+        columnStart,
+        columnEnd,
+        row,
+        stackIndex = 0,
+      ) => {
+        const button = document.createElement("button");
+        button.className = className;
+        button.type = "button";
+        button.textContent = item.title;
+        button.style.gridColumn = `${columnStart} / ${columnEnd}`;
+        button.style.gridRow = row;
+        button.style.marginTop = `${34 + stackIndex * 36}px`;
+        button.addEventListener("click", () => openDetail(item));
+        grid.append(button);
+      };
+
+      const renderMonth = (monthElement) => {
+        const [year, month] = monthElement.dataset.month.split("-").map(Number);
+        const weekdayRow = monthElement.querySelector(".weekdays");
+        const grid = monthElement.querySelector(".month-grid");
+        const first = new Date(year, month - 1, 1);
+        const daysInMonth = new Date(year, month, 0).getDate();
+        const offset = first.getDay();
+
+        weekdays.forEach((weekday) => {
+          const cell = document.createElement("div");
+          cell.className = "weekday";
+          cell.textContent = weekday;
+          weekdayRow.append(cell);
+        });
+
+        for (let i = 0; i < 42; i += 1) {
+          const dayNumber = i - offset + 1;
+          const day = document.createElement("div");
+          day.className =
+            dayNumber >= 1 && dayNumber <= daysInMonth
+              ? "day"
+              : "day is-outside";
+          day.style.gridColumn = (i % 7) + 1;
+          day.style.gridRow = Math.floor(i / 7) + 1;
+
+          if (dayNumber >= 1 && dayNumber <= daysInMonth) {
+            const label = document.createElement("span");
+            label.className = "date-num";
+            label.textContent = dayNumber;
+            day.append(label);
+
+            const renderedDate = new Date(year, month - 1, dayNumber);
+            if (dateKey(renderedDate) === todayKey) {
+              day.classList.add("is-today");
+              day.setAttribute("aria-label", `${formatDate(todayKey)}, today`);
+            }
+          }
+
+          grid.append(day);
+        }
+
+        const dayCounts = new Map();
+
+        milestones
+          .filter((item) => {
+            const date = parseDate(item.date);
+            return date.getFullYear() === year && date.getMonth() === month - 1;
+          })
+          .forEach((item) => {
+            const date = parseDate(item.date);
+            const key = dateKey(date);
+            const stackIndex = dayCounts.get(key) ?? 0;
+            dayCounts.set(key, stackIndex + 1);
+            const index = offset + date.getDate() - 1;
+            const row = Math.floor(index / 7) + 1;
+            const column = (index % 7) + 1;
+            addButton(
+              grid,
+              {
+                date: formatDate(item.date),
+                title: item.title,
+                body: item.body,
+              },
+              "event milestone",
+              column,
+              column + 1,
+              row,
+              stackIndex,
+            );
+          });
+
+      };
+
+      document.querySelectorAll(".month").forEach(renderMonth);
+
+      const milestoneList = document.querySelector("#milestoneList");
+      milestones.forEach((item) => {
+        const button = document.createElement("button");
+        button.className = "milestone-link";
+        button.type = "button";
+        const date = document.createElement("span");
+        date.className = "event-date";
+        date.textContent = formatDate(item.date);
+        const title = document.createElement("strong");
+        title.textContent = item.title;
+        button.append(date, title);
+        button.addEventListener("click", () =>
+          openDetail({
+            date: formatDate(item.date),
+            title: item.title,
+            body: item.body,
+          }),
+        );
+        milestoneList.append(button);
+      });
+
+      modalClose.addEventListener("click", () => dialog.close());
+      dialog.addEventListener("click", (event) => {
+        if (event.target === dialog) dialog.close();
+      });
+    </script>
+  </body>
+</html>
