@@ -76,12 +76,7 @@
       }
 
       .title-block {
-        grid-column: span 5;
-      }
-
-      .intro {
-        grid-column: 6 / span 3;
-        max-width: 58ch;
+        grid-column: span 8;
       }
 
       .eyebrow,
@@ -117,7 +112,6 @@
         letter-spacing: -0.04em;
       }
 
-      .intro,
       p {
         color: var(--muted);
         font-size: 1rem;
@@ -282,6 +276,47 @@
         line-height: 1.25;
       }
 
+      .cta {
+        display: grid;
+        gap: 12px;
+        padding-top: 2px;
+      }
+
+      .cta p {
+        max-width: 32ch;
+      }
+
+      .action-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .action-link {
+        display: inline-flex;
+        align-items: center;
+        min-height: 38px;
+        padding: 0 13px;
+        color: var(--ink);
+        font-size: 0.92rem;
+        line-height: 1;
+        text-decoration: none;
+        background: transparent;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .action-link:hover {
+        background: var(--surface);
+      }
+
+      .action-link.is-primary {
+        color: var(--raised);
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+
       dialog {
         width: min(560px, calc(100% - 32px));
         margin: auto;
@@ -336,8 +371,7 @@
           grid-template-columns: 1fr;
         }
 
-        .title-block,
-        .intro {
+        .title-block {
           grid-column: auto;
         }
 
@@ -372,10 +406,6 @@
           <p class="eyebrow">K&amp;N x Dusty Times 08</p>
           <h1>Partnership calendar</h1>
         </div>
-        <p class="intro">
-          Milestones appear as date markers. Click a milestone to view the full
-          description, or use the list for a simple vertical view.
-        </p>
       </header>
 
       <div class="layout">
@@ -404,6 +434,15 @@
             <h2>Milestones</h2>
           </div>
           <div class="milestone-list" id="milestoneList"></div>
+          <div class="cta">
+            <p>Questions about timing, assets, or approvals?</p>
+            <a
+              class="action-link is-primary"
+              href="mailto:boyd@customwheelhouse.com,brett@radsmth.com?subject=K%26N%20x%20Dusty%20Times%2008%20partnership%20calendar%20question"
+            >
+              Email Boyd and Brett
+            </a>
+          </div>
         </aside>
       </div>
     </main>
@@ -413,6 +452,14 @@
         <span class="label" id="modalDate"></span>
         <h2 id="modalTitle"></h2>
         <p id="modalBody"></p>
+        <div class="action-row" aria-label="Calendar actions">
+          <a class="action-link" id="googleCalendarLink" target="_blank" rel="noreferrer">
+            Add to Google Calendar
+          </a>
+          <a class="action-link" id="appleCalendarLink">
+            Add to Apple/iCloud Calendar
+          </a>
+        </div>
         <button class="close" type="button" id="modalClose">Close</button>
       </div>
     </dialog>
@@ -495,6 +542,9 @@
       const modalTitle = document.querySelector("#modalTitle");
       const modalBody = document.querySelector("#modalBody");
       const modalClose = document.querySelector("#modalClose");
+      const googleCalendarLink = document.querySelector("#googleCalendarLink");
+      const appleCalendarLink = document.querySelector("#appleCalendarLink");
+      let activeCalendarUrl = "";
 
       const parseDate = (value) => {
         const [year, month, day] = value.split("-").map(Number);
@@ -515,10 +565,62 @@
         return `${monthNames[date.getMonth()]} ${date.getDate()}`;
       };
 
+      const compactDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}${month}${day}`;
+      };
+
+      const escapeIcsText = (value) =>
+        value
+          .replaceAll("\\", "\\\\")
+          .replaceAll(",", "\\,")
+          .replaceAll(";", "\\;")
+          .replaceAll("\n", "\\n");
+
+      const calendarFilename = (title, date) =>
+        `${date}-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}.ics`;
+
+      const buildCalendarActions = ({ date, title, body }) => {
+        const start = parseDate(date);
+        const end = new Date(start);
+        end.setDate(start.getDate() + 1);
+        const dates = `${compactDate(start)}/${compactDate(end)}`;
+        const params = new URLSearchParams({
+          action: "TEMPLATE",
+          text: title,
+          dates,
+          details: body,
+        });
+        googleCalendarLink.href = `https://calendar.google.com/calendar/render?${params.toString()}`;
+
+        if (activeCalendarUrl) URL.revokeObjectURL(activeCalendarUrl);
+        const ics = [
+          "BEGIN:VCALENDAR",
+          "VERSION:2.0",
+          "PRODID:-//Dusty Times//K&N Partnership Calendar//EN",
+          "BEGIN:VEVENT",
+          `UID:${date}-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}@dustytimes`,
+          `DTSTAMP:${compactDate(new Date())}T000000Z`,
+          `DTSTART;VALUE=DATE:${compactDate(start)}`,
+          `DTEND;VALUE=DATE:${compactDate(end)}`,
+          `SUMMARY:${escapeIcsText(title)}`,
+          `DESCRIPTION:${escapeIcsText(body)}`,
+          "END:VEVENT",
+          "END:VCALENDAR",
+        ].join("\r\n");
+        const file = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+        activeCalendarUrl = URL.createObjectURL(file);
+        appleCalendarLink.href = activeCalendarUrl;
+        appleCalendarLink.download = calendarFilename(title, date);
+      };
+
       const openDetail = ({ date, title, body }) => {
-        modalDate.textContent = date;
+        modalDate.textContent = formatDate(date);
         modalTitle.textContent = title;
         modalBody.textContent = body;
+        buildCalendarActions({ date, title, body });
         dialog.showModal();
       };
 
@@ -601,7 +703,7 @@
             addButton(
               grid,
               {
-                date: formatDate(item.date),
+                date: item.date,
                 title: item.title,
                 body: item.body,
               },
@@ -630,7 +732,7 @@
         button.append(date, title);
         button.addEventListener("click", () =>
           openDetail({
-            date: formatDate(item.date),
+            date: item.date,
             title: item.title,
             body: item.body,
           }),
