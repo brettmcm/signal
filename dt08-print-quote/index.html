@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dusty Times Issue 08 print quote</title>
+    <link rel="stylesheet" href="https://use.typekit.net/shq4xoc.css" />
+    <link rel="stylesheet" href="assets/mcmds.css" />
+    <style>
+      :root {
+        --page-rule: 1px solid var(--mcm-line);
+      }
+
+      body {
+        color-scheme: light dark;
+      }
+
+      .masthead {
+        padding-block: 36px 0;
+      }
+
+      .masthead__inner {
+        align-items: center;
+        border-bottom: var(--page-rule);
+        padding-bottom: 20px;
+      }
+
+      .logo {
+        grid-column: 1 / span 3;
+        width: 188px;
+      }
+
+      .logo--dark {
+        display: none;
+      }
+
+      .masthead__meta {
+        grid-column: 5 / -1;
+        display: flex;
+        justify-content: flex-end;
+        gap: 24px;
+        color: var(--mcm-muted);
+        font-size: 0.94rem;
+        line-height: 1.35;
+      }
+
+      .hero {
+        padding-block: 76px 88px;
+      }
+
+      .kicker,
+      .eyebrow {
+        color: var(--mcm-accent);
+        font-size: 0.94rem;
+        font-weight: 500;
+        letter-spacing: 0;
+        line-height: 1.2;
+      }
+
+      .hero__kicker {
+        grid-column: 1 / span 2;
+        padding-top: 10px;
+      }
+
+      .hero__content {
+        grid-column: 3 / -1;
+      }
+
+      .hero h1 {
+        max-width: 11ch;
+        font-size: clamp(3.25rem, 8vw, 7.75rem);
+        line-height: 0.96;
+      }
+
+      .lead {
+        max-width: 760px;
+        margin-top: 32px;
+        color: var(--mcm-muted);
+        font-size: 1.45rem;
+        line-height: 1.38;
+        letter-spacing: -0.01em;
+      }
+
+      .summary-row {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1px;
+        margin-top: 56px;
+        background: var(--mcm-line);
+        border: var(--page-rule);
+      }
+
+      .summary-item {
+        min-height: 150px;
+        padding: 22px;
+        background: var(--mcm-bg);
+      }
+
+      .summary-item span,
+      .cell-label,
+      .note-label {
+        display: block;
+        color: var(--mcm-tertiary);
+        font-size: 0.88rem;
+        line-height: 1.25;
+      }
+
+      .summary-item strong {
+        display: block;
+        margin-top: 18px;
+        font-size: 1.35rem;
+        line-height: 1.12;
+        letter-spacing: -0.01em;
+      }
+
+      .section-heading {
+        grid-column: 1 / span 2;
+      }
+
+      .section-heading h2 {
+        font-size: 2rem;
+      }
+
+      .section-heading p {
+        margin-top: 14px;
+        max-width: 22rem;
+        font-size: 0.98rem;
+      }
+
+      .section-body {
+        grid-column: 3 / -1;
+      }
+
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        border-top: var(--page-rule);
+      }
+
+      .table th,
+      .table td {
+        padding: 18px 0;
+        border-bottom: var(--page-rule);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      .table th {
+        color: var(--mcm-tertiary);
+        font-size: 0.92rem;
+        font-weight: 500;
+      }
+
+      .table td {
+        color: var(--mcm-muted);
+        font-size: 1rem;
+      }
+
+      .table td:first-child,
+      .table th:first-child {
+        padding-right: 28px;
+      }
+
+      .table .amount,
+      .table .date {
+        width: 26%;
+        color: var(--mcm-ink);
+        font-weight: 500;
+        text-align: right;
+        white-space: nowrap;
+      }
+
+      .quote-block {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+        gap: 48px;
+      }
+
+      .spec-list {
+        display: grid;
+        gap: 1px;
+        background: var(--mcm-line);
+        border: var(--page-rule);
+      }
+
+      .spec-list div {
+        display: grid;
+        grid-template-columns: 42% 1fr;
+        gap: 18px;
+        padding: 16px 18px;
+        background: var(--mcm-bg);
+      }
+
+      .spec-list dt {
+        color: var(--mcm-tertiary);
+        font-size: 0.92rem;
+        font-weight: 500;
+      }
+
+      .spec-list dd {
+        color: var(--mcm-muted);
+        font-size: 0.98rem;
+      }
+
+      .note-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 24px;
+        margin-top: 32px;
+      }
+
+      .note {
+        border-top: 2px solid var(--mcm-accent);
+        padding-top: 16px;
+      }
+
+      .note p {
+        margin-top: 10px;
+        color: var(--mcm-muted);
+        font-size: 0.98rem;
+      }
+
+      .timeline {
+        display: grid;
+        gap: 0;
+        border-top: var(--page-rule);
+      }
+
+      .timeline__item {
+        display: grid;
+        grid-template-columns: 170px 1fr;
+        gap: 32px;
+        padding: 22px 0;
+        border-bottom: var(--page-rule);
+      }
+
+      .timeline__date {
+        color: var(--mcm-ink);
+        font-weight: 500;
+      }
+
+      .timeline__label {
+        color: var(--mcm-muted);
+      }
+
+      .total-strip {
+        margin-top: 34px;
+        padding: 24px 0 0;
+        border-top: 2px solid var(--mcm-ink);
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+      }
+
+      .total-strip span {
+        color: var(--mcm-muted);
+      }
+
+      .total-strip strong {
+        font-size: 2rem;
+        line-height: 1;
+        letter-spacing: -0.03em;
+        white-space: nowrap;
+      }
+
+      .footer-note {
+        grid-column: 3 / -1;
+        border-top: var(--page-rule);
+        padding-top: 20px;
+        color: var(--mcm-tertiary);
+        font-size: 0.9rem;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .logo--light {
+          display: none;
+        }
+
+        .logo--dark {
+          display: block;
+        }
+      }
+
+      @media (max-width: 960px) {
+        :root {
+          --mcm-page-gutter: 20px;
+          --mcm-grid-padding: 0px;
+          --mcm-grid-gap: 18px;
+          --mcm-section-space: 72px;
+          --mcm-section-space-tight: 56px;
+        }
+
+        .masthead__inner,
+        .hero__kicker,
+        .hero__content,
+        .section-heading,
+        .section-body,
+        .footer-note {
+          grid-column: 1 / -1;
+        }
+
+        .masthead__inner {
+          gap: 18px;
+        }
+
+        .logo {
+          grid-column: 1 / -1;
+          width: 156px;
+        }
+
+        .masthead__meta {
+          grid-column: 1 / -1;
+          justify-content: flex-start;
+          flex-wrap: wrap;
+        }
+
+        .hero {
+          padding-block: 52px 64px;
+        }
+
+        .hero h1 {
+          max-width: 9ch;
+          font-size: 3.8rem;
+        }
+
+        .lead {
+          font-size: 1.2rem;
+        }
+
+        .summary-row,
+        .quote-block,
+        .note-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .summary-item {
+          min-height: auto;
+        }
+
+        .table,
+        .table tbody,
+        .table tr,
+        .table th,
+        .table td {
+          display: block;
+        }
+
+        .table thead {
+          display: none;
+        }
+
+        .table tr {
+          padding: 18px 0;
+          border-bottom: var(--page-rule);
+        }
+
+        .table td {
+          border: 0;
+          padding: 4px 0;
+        }
+
+        .table .amount,
+        .table .date {
+          width: auto;
+          text-align: left;
+          white-space: normal;
+        }
+
+        .timeline__item {
+          grid-template-columns: 1fr;
+          gap: 6px;
+        }
+
+        .spec-list div {
+          grid-template-columns: 1fr;
+          gap: 4px;
+        }
+
+        .total-strip {
+          display: grid;
+        }
+      }
+    </style>
+  </head>
+  <body class="mcm-page">
+    <header class="mcm-section masthead">
+      <div class="mcm-section__inner masthead__inner">
+        <img class="logo logo--light" src="assets/dusty-times-logo-primary-black.png" alt="Dusty Times" />
+        <img class="logo logo--dark" src="assets/dusty-times-logo-primary-white.png" alt="Dusty Times" />
+        <div class="masthead__meta" aria-label="Quote metadata">
+          <span>Red Planet Print Management</span>
+          <span>Quote HH261106</span>
+          <span>11 June 2026</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="mcm-section hero">
+        <div class="mcm-section__inner">
+          <p class="hero__kicker kicker">Issue 08 production quote</p>
+          <div class="hero__content">
+            <h1>Print schedule and pricing</h1>
+            <p class="lead">
+              Lionel Marz proposed a production path that requires press-ready files by
+              <strong>26 July 2026</strong> to target final warehouse arrival on
+              <strong>2 November 2026</strong>, assuming no shipping delays.
+            </p>
+
+            <div class="summary-row" aria-label="Quote summary">
+              <div class="summary-item">
+                <span>Base run</span>
+                <strong>2,000 copies</strong>
+              </div>
+              <div class="summary-item">
+                <span>Unit price</span>
+                <strong>US$3.94</strong>
+              </div>
+              <div class="summary-item">
+                <span>Production total</span>
+                <strong>US$8,463.00</strong>
+              </div>
+              <div class="summary-item">
+                <span>Delivery basis</span>
+                <strong>DDU to Santa Fe Springs, CA</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mcm-section mcm-section--tight">
+        <div class="mcm-section__inner">
+          <div class="section-heading">
+            <p class="eyebrow">Timeline</p>
+            <h2>Proposed production schedule</h2>
+            <p>The schedule depends on timely file delivery and assumes no shipping delays.</p>
+          </div>
+          <div class="section-body">
+            <div class="timeline">
+              <div class="timeline__item">
+                <div class="timeline__date">26 July 2026</div>
+                <div class="timeline__label">Press-ready files supplied</div>
+              </div>
+              <div class="timeline__item">
+                <div class="timeline__date">2 August 2026</div>
+                <div class="timeline__label">PDF proofs supplied</div>
+              </div>
+              <div class="timeline__item">
+                <div class="timeline__date">12 August 2026</div>
+                <div class="timeline__label">Final proofs approved</div>
+              </div>
+              <div class="timeline__item">
+                <div class="timeline__date">20 September 2026</div>
+                <div class="timeline__label">Advance copies sent out</div>
+              </div>
+              <div class="timeline__item">
+                <div class="timeline__date">25 September 2026</div>
+                <div class="timeline__label">Advance copies approved and shipping date</div>
+              </div>
+              <div class="timeline__item">
+                <div class="timeline__date">5 October 2026</div>
+                <div class="timeline__label">Estimated departure from Shenzhen port</div>
+              </div>
+              <div class="timeline__item">
+                <div class="timeline__date">23 October 2026</div>
+                <div class="timeline__label">Estimated arrival at LAX port</div>
+              </div>
+              <div class="timeline__item">
+                <div class="timeline__date">2 November 2026</div>
+                <div class="timeline__label">Estimated arrival at final warehouse</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mcm-section mcm-section--tight">
+        <div class="mcm-section__inner">
+          <div class="section-heading">
+            <p class="eyebrow">Quote</p>
+            <h2>Base production price</h2>
+            <p>Core book production is quoted DDU to Custom Wheelhouse’s Santa Fe Springs warehouse and includes the quoted cover upgrades.</p>
+          </div>
+          <div class="section-body">
+            <div class="quote-block">
+              <div>
+                <table class="table" aria-label="Base quote line items">
+                  <thead>
+                    <tr>
+                      <th scope="col">Line item</th>
+                      <th scope="col">Unit cost</th>
+                      <th scope="col" class="amount">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>2,000 copies of Dusty Times</td>
+                      <td>US$3.94 per copy</td>
+                      <td class="amount">US$7,880.00</td>
+                    </tr>
+                    <tr>
+                      <td>Scratch-resistant matte laminated cover upgrade</td>
+                      <td>US$0.12 per copy</td>
+                      <td class="amount">US$240.00</td>
+                    </tr>
+                    <tr>
+                      <td>Embossing upgrade on front and back cover</td>
+                      <td>US$163 die plus US$0.09 per copy</td>
+                      <td class="amount">US$343.00</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="total-strip">
+                  <span>Base production total including cover upgrades</span>
+                  <strong>US$8,463.00</strong>
+                </div>
+              </div>
+
+              <dl class="spec-list" aria-label="Production specifications">
+                <div>
+                  <dt>Trim size</dt>
+                  <dd>9 by 12 inches landscape, 230 by 305 mm</dd>
+                </div>
+                <div>
+                  <dt>Extent</dt>
+                  <dd>124 or 128 pages plus cover</dd>
+                </div>
+                <div>
+                  <dt>Text stock</dt>
+                  <dd>100# Endurance Silk Book, based on 157 gsm TKS matte art paper</dd>
+                </div>
+                <div>
+                  <dt>Cover stock</dt>
+                  <dd>130# Topkote Dull Cover, based on 300 gsm double-sided artboard</dd>
+                </div>
+                <div>
+                  <dt>Printing</dt>
+                  <dd>Text 4 color by 4 color. Cover 4 color by 0 color with satin lamination and spot UV gloss on front cover.</dd>
+                </div>
+                <div>
+                  <dt>Binding</dt>
+                  <dd>Thread-sewn softcover, trimmed flush on three sides, individually shrink wrapped</dd>
+                </div>
+                <div>
+                  <dt>Proofing</dt>
+                  <dd>One set of online high-resolution proofs plus one blank dummy book for approval</dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mcm-section mcm-section--tight">
+        <div class="mcm-section__inner">
+          <div class="section-heading">
+            <p class="eyebrow">Optional packaging</p>
+            <h2>Additional quoted charges</h2>
+            <p>These items appear as separate additions to the base book production quote.</p>
+          </div>
+          <div class="section-body">
+            <table class="table" aria-label="Optional packaging charges">
+              <thead>
+                <tr>
+                  <th scope="col">Item</th>
+                  <th scope="col">Basis</th>
+                  <th scope="col" class="amount">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Standard shipper, 1,500 units</td>
+                  <td>US$1.72 per copy to produce the box</td>
+                  <td class="amount">US$3,440.00</td>
+                </tr>
+                <tr>
+                  <td>Standard shipper container space</td>
+                  <td>US$0.22 per copy</td>
+                  <td class="amount">US$440.00</td>
+                </tr>
+                <tr>
+                  <td>VIP box, 500 units</td>
+                  <td>US$11.34 per copy</td>
+                  <td class="amount">US$5,670.00</td>
+                </tr>
+                <tr>
+                  <td>VIP shipping box</td>
+                  <td>US$5.359 per copy</td>
+                  <td class="amount">US$2,679.50</td>
+                </tr>
+                <tr>
+                  <td>VIP box container space</td>
+                  <td>US$1.76 per copy</td>
+                  <td class="amount">US$880.00</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="note-grid">
+              <div class="note">
+                <span class="note-label">Standard shipper</span>
+                <p>Sturdy cardboard self-shipper with single-color artwork inside and outside, designed to hold one shrink-wrapped book.</p>
+              </div>
+              <div class="note">
+                <span class="note-label">VIP box</span>
+                <p>Commemorative clamshell box with imitation-leather paper wrap, foil stamping, lined interior, tray, EVA insert, velvet, and screen printing.</p>
+              </div>
+              <div class="note">
+                <span class="note-label">Sponsor versioning</span>
+                <p>Lionel suggests two VIP self-shipper versions: 250 Dusty Times branded and 250 co-branded with Hella.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mcm-section mcm-section--tight">
+        <div class="mcm-section__inner">
+          <div class="section-heading">
+            <p class="eyebrow">Terms</p>
+            <h2>Commercial notes</h2>
+          </div>
+          <div class="section-body">
+            <table class="table" aria-label="Commercial terms">
+              <tbody>
+                <tr>
+                  <td><strong>Delivery</strong></td>
+                  <td>DDU delivery to Custom Wheelhouse, 15500 Cornet St, Santa Fe Springs, CA 90670. Packed into cartons and stacked onto IPPC pallets.</td>
+                </tr>
+                <tr>
+                  <td><strong>Import costs</strong></td>
+                  <td>DDU price does not include import taxes or tariffs imposed by U.S. Customs at port of entry. These taxes are to be paid by Custom Wheelhouse.</td>
+                </tr>
+                <tr>
+                  <td><strong>Payment terms</strong></td>
+                  <td>50% deposit when work commences. Balance is due after post-production advances are approved and before shipping documents are released for clearance.</td>
+                </tr>
+                <tr>
+                  <td><strong>Validity</strong></td>
+                  <td>Quote valid for 30 days from 11 June 2026, subject to review if raw material, ocean freight, exchange rate, or related costs move significantly.</td>
+                </tr>
+                <tr>
+                  <td><strong>Quantity tolerance</strong></td>
+                  <td>Industry-standard 5% overs or unders. Overrun copies are charged at a lower run-on price.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="mcm-section mcm-section--tight">
+      <div class="mcm-section__inner">
+        <p class="footer-note">
+          Source: Red Planet Print Management production schedule and attached PDF quotation, “Custom Wheel House - Dusty Times - HH - 11 June 2026.pdf.” Prepared as an internal summary page.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
