@@ -1,28 +1,149 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>DT08 Print Quote</title>
-    <link rel="stylesheet" href="https://use.typekit.net/shq4xoc.css" />
-    <link rel="stylesheet" href="assets/mcmds.css" />
+    <link rel="stylesheet" href="https://use.typekit.net/shq4xoc.css">
+    <link rel="stylesheet" href="assets/mcmds.css">
     <style>
+      @font-face {
+        font-family: "Departure Mono";
+        src: url("assets/DepartureMono-Regular.woff") format("woff");
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+      }
+
       :root {
         --page-rule: 1px solid var(--mcm-line);
+        --table-divider: rgba(48, 52, 59, 0.08);
       }
 
       body {
         color-scheme: light dark;
+        font-size: 0.94rem;
+      }
+
+      body.mcm-page {
+        background: #ffffff;
+      }
+
+      .app-shell {
+        --mcm-bg: #ffffff;
+        --mcm-surface: #f2f4f7;
+        --mcm-surface-raised: #ffffff;
+        --mcm-ink: #30343b;
+        --mcm-muted: #626b77;
+        --mcm-tertiary: #9299a3;
+        --mcm-line: rgba(48, 52, 59, 0.14);
+        --mcm-line-strong: rgba(48, 52, 59, 0.26);
+        width: 100%;
+        min-height: 100vh;
+        background: var(--mcm-bg);
+        color: var(--mcm-ink);
+        color-scheme: light;
+      }
+
+      .app-shell main {
+        display: block;
+      }
+
+      .workspace {
+        width: 100%;
+        max-width: 980px;
+        margin-inline: auto;
+        min-width: 0;
+      }
+
+      .side-nav {
+        padding: 40px 16px 40px 28px;
+        border-right: var(--page-rule);
+      }
+
+      .side-nav__inner {
+        position: sticky;
+        top: 112px;
+        display: grid;
+        gap: 6px;
+      }
+
+      .side-nav a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 40px;
+        padding: 8px 12px;
+        border-radius: 6px;
+        color: var(--mcm-muted);
+        font-size: 0.86rem;
+        font-weight: 500;
+        text-decoration: none;
+      }
+
+      .side-nav a::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border: 1px solid currentColor;
+        border-radius: 2px;
+      }
+
+      .side-nav a:first-child {
+        background: var(--mcm-surface);
+        color: var(--mcm-ink);
+      }
+
+      body:has(#timeline:target) .side-nav a:first-child,
+      body:has(#pricing:target) .side-nav a:first-child,
+      body:has(#terms:target) .side-nav a:first-child {
+        background: transparent;
+        color: var(--mcm-muted);
+      }
+
+      body:has(#timeline:target) .side-nav a[href="#timeline"],
+      body:has(#pricing:target) .side-nav a[href="#pricing"],
+      body:has(#terms:target) .side-nav a[href="#terms"] {
+        background: var(--mcm-surface);
+        color: var(--mcm-ink);
+      }
+
+      .side-nav a:hover,
+      .side-nav a:focus-visible {
+        background: var(--mcm-surface);
+        color: var(--mcm-ink);
+      }
+
+      .app-shell .mcm-section {
+        --mcm-page-gutter: 36px;
+        --mcm-grid-padding: 0px;
+        --mcm-section-space: 64px;
+        --mcm-section-space-tight: 48px;
+      }
+
+      .app-shell .hero {
+        padding-block: 48px 40px;
+      }
+
+      body ::selection {
+        background: color-mix(in srgb, var(--mcm-ink) 18%, transparent);
       }
 
       .masthead {
-        padding-block: 36px 0;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        width: 100%;
+        max-width: 980px;
+        margin-inline: auto;
+        padding-block: 0;
+        background: color-mix(in srgb, var(--mcm-bg) 94%, transparent);
+        backdrop-filter: blur(14px);
       }
 
       .masthead__inner {
         align-items: center;
         border-bottom: var(--page-rule);
-        padding-bottom: 20px;
+        min-height: 72px;
       }
 
       .logo {
@@ -35,65 +156,113 @@
       }
 
       .masthead__meta {
-        grid-column: 5 / -1;
+        grid-column: 4 / -1;
         display: flex;
         justify-content: flex-end;
+        align-items: center;
         gap: 24px;
         color: var(--mcm-muted);
-        font-size: 0.94rem;
+        font-size: 0.9rem;
         line-height: 1.35;
       }
 
+      .masthead__nav {
+        display: none;
+        align-items: center;
+        gap: 16px;
+        margin-left: 8px;
+        padding-left: 24px;
+        border-left: var(--page-rule);
+      }
+
+      .masthead__nav a {
+        color: var(--mcm-muted);
+        font-size: 0.84rem;
+        font-weight: 500;
+        text-decoration: none;
+      }
+
+      .masthead__nav a:hover,
+      .masthead__nav a:focus-visible {
+        color: var(--mcm-ink);
+      }
+
       .hero {
-        padding-block: 76px 88px;
+        padding-block: 64px 72px;
       }
 
       .kicker,
       .eyebrow {
-        color: var(--mcm-accent);
-        font-size: 0.94rem;
+        color: var(--mcm-tertiary);
+        font-size: 0.82rem;
         font-weight: 500;
         letter-spacing: 0;
         line-height: 1.2;
       }
 
       .hero__kicker {
-        grid-column: 1 / span 2;
-        padding-top: 10px;
+        grid-column: 1 / -1;
+        padding-top: 0;
+        margin-bottom: 12px;
       }
 
       .hero__content {
-        grid-column: 3 / -1;
+        grid-column: 1 / -1;
       }
 
       .hero h1 {
-        max-width: 11ch;
-        font-size: clamp(3.25rem, 8vw, 7.75rem);
-        line-height: 0.96;
+        max-width: 14ch;
+        font-size: clamp(2.5rem, 4vw, 3.75rem);
+        line-height: 1;
       }
 
       .lead {
-        max-width: 760px;
-        margin-top: 32px;
+        max-width: 700px;
+        margin-top: 24px;
         color: var(--mcm-muted);
-        font-size: 1.45rem;
-        line-height: 1.38;
+        font-size: 1rem;
+        line-height: 1.45;
         letter-spacing: -0.01em;
       }
 
       .summary-row {
         display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 1px;
-        margin-top: 56px;
-        background: var(--mcm-line);
-        border: var(--page-rule);
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 32px;
+        margin-top: 40px;
+        padding-block: 18px;
+        border-top: var(--page-rule);
       }
 
       .summary-item {
-        min-height: 150px;
-        padding: 22px;
-        background: var(--mcm-bg);
+        min-width: 0;
+      }
+
+      .schedule-link {
+        display: inline-block;
+        margin-top: 8px;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        font-size: 0.8rem;
+        font-weight: 500;
+        text-align: left;
+        text-decoration: underline;
+        text-decoration-color: var(--mcm-line-strong);
+        text-underline-offset: 0.2em;
+        cursor: pointer;
+      }
+
+      .schedule-link:hover {
+        text-decoration-color: currentColor;
+      }
+
+      .schedule-link:focus-visible,
+      .dialog-close:focus-visible {
+        outline: 2px solid var(--mcm-ink);
+        outline-offset: 2px;
       }
 
       .summary-item span,
@@ -107,28 +276,90 @@
 
       .summary-item strong {
         display: block;
-        margin-top: 18px;
-        font-size: 1.35rem;
+        margin-top: 8px;
+        font-size: 1.18rem;
         line-height: 1.12;
         letter-spacing: -0.01em;
       }
 
       .section-heading {
-        grid-column: 1 / span 2;
+        grid-column: 1 / -1;
+        position: static;
+        margin-bottom: 24px;
       }
 
       .section-heading h2 {
-        font-size: 2rem;
+        font-size: 1.45rem;
+        font-weight: 600;
       }
 
       .section-heading p {
         margin-top: 14px;
         max-width: 22rem;
-        font-size: 0.98rem;
+        font-size: 0.9rem;
       }
 
       .section-body {
-        grid-column: 3 / -1;
+        grid-column: 1 / -1;
+        min-width: 0;
+      }
+
+      #timeline,
+      #pricing,
+      #terms {
+        scroll-margin-top: 92px;
+      }
+
+      #pricing .section-heading,
+      #pricing .section-body {
+        grid-column: 1 / -1;
+      }
+
+      #pricing .section-heading {
+        position: static;
+        display: block;
+        margin-bottom: 24px;
+      }
+
+      #pricing .table {
+        table-layout: fixed;
+      }
+
+      #pricing .table th,
+      #pricing .table td {
+        padding: 12px 14px;
+      }
+
+      #pricing .table th:first-child,
+      #pricing .table td:first-child {
+        padding-left: 0;
+      }
+
+      #pricing .table th:last-child,
+      #pricing .table td:last-child {
+        padding-right: 0;
+      }
+
+      #pricing .table .amount,
+      #pricing .quantity-input,
+      #pricing .total-strip strong,
+      #pricing .calculator__total strong {
+        font-variant-numeric: tabular-nums;
+      }
+
+      #pricing .currency {
+        font-family: "Departure Mono", "SFMono-Regular", Consolas, monospace;
+        font-weight: 400;
+        letter-spacing: 0;
+      }
+
+      #pricing table[aria-label="Estimated airfreight costs"] td {
+        vertical-align: middle;
+      }
+
+      #terms .table td:first-child {
+        width: 30%;
+        white-space: nowrap;
       }
 
       .table {
@@ -147,13 +378,17 @@
 
       .table th {
         color: var(--mcm-tertiary);
-        font-size: 0.92rem;
+        font-size: 0.82rem;
         font-weight: 500;
       }
 
       .table td {
         color: var(--mcm-muted);
-        font-size: 1rem;
+        font-size: 0.92rem;
+      }
+
+      .table tbody tr:not(:last-child) td {
+        border-bottom-color: var(--table-divider);
       }
 
       .table td:first-child,
@@ -172,8 +407,133 @@
 
       .quote-block {
         display: grid;
-        grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
-        gap: 48px;
+        gap: 0;
+      }
+
+      .calculator {
+        margin-top: 96px;
+      }
+
+      .calculator .table {
+        border-top: 0;
+      }
+
+      .pricing-group {
+        margin-top: 32px;
+      }
+
+      .pricing-group--first {
+        margin-top: 0;
+      }
+
+      .pricing-group h3 {
+        margin-bottom: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+      }
+
+      .pricing-total {
+        margin-top: 32px;
+      }
+
+      .spec-panel h4 {
+        margin: 32px 0 12px;
+      }
+
+      .calculator__intro {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 24px;
+        padding: 24px 0;
+      }
+
+      .calculator__intro h3 {
+        font-size: 1rem;
+        font-weight: 600;
+      }
+
+      .calculator__intro p,
+      .calculator__hint {
+        color: var(--mcm-tertiary);
+        font-size: 0.88rem;
+      }
+
+      .quantity-input {
+        width: 68px;
+        min-height: 32px;
+        padding: 5px 8px;
+        border: 1px solid var(--mcm-line-strong);
+        border-radius: 4px;
+        background: var(--mcm-surface);
+        color: var(--mcm-ink);
+        font-size: 0.9rem;
+        line-height: 1.2;
+        text-align: right;
+        appearance: textfield;
+        -moz-appearance: textfield;
+      }
+
+      .quantity-input::-webkit-inner-spin-button,
+      .quantity-input::-webkit-outer-spin-button {
+        margin: 0;
+        appearance: none;
+        -webkit-appearance: none;
+      }
+
+      .quantity-input:focus-visible {
+        outline: 2px solid var(--mcm-ink);
+        outline-offset: 3px;
+      }
+
+      .calculator__totals {
+        margin-top: 24px;
+        border-bottom: 2px solid var(--mcm-ink);
+      }
+
+      .calculator__total {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 24px;
+        padding: 14px 0;
+        border-top: var(--page-rule);
+      }
+
+      .calculator__total span {
+        color: var(--mcm-tertiary);
+        font-size: 0.88rem;
+      }
+
+      .calculator__total strong {
+        margin-left: auto;
+        letter-spacing: 0;
+        white-space: nowrap;
+      }
+
+      .calculator__total--grand {
+        border-top: 1px solid var(--mcm-line-strong);
+      }
+
+      .calculator__total--grand span,
+      .calculator__total--grand strong {
+        color: var(--mcm-ink);
+      }
+
+      .calculator__total--grand span {
+        font-weight: 600;
+      }
+
+      .calculator__total--grand strong {
+        font-weight: 500;
+      }
+
+      .calculator__hint {
+        margin-top: 12px;
+      }
+
+      .spec-panel {
+        padding-bottom: 24px;
       }
 
       .spec-list {
@@ -210,7 +570,7 @@
       }
 
       .note {
-        border-top: 2px solid var(--mcm-accent);
+        border-top: var(--page-rule);
         padding-top: 16px;
       }
 
@@ -230,7 +590,7 @@
         display: grid;
         grid-template-columns: 170px 1fr;
         gap: 32px;
-        padding: 22px 0;
+        padding: 8px 0;
         border-bottom: var(--page-rule);
       }
 
@@ -241,6 +601,60 @@
 
       .timeline__label {
         color: var(--mcm-muted);
+      }
+
+      .schedule-dialog {
+        width: min(680px, calc(100vw - 32px));
+        max-height: calc(100vh - 48px);
+        margin: auto;
+        padding: 0;
+        border: var(--page-rule);
+        border-radius: 6px;
+        background: var(--mcm-bg);
+        color: var(--mcm-ink);
+      }
+
+      .schedule-dialog::backdrop {
+        background: rgba(0, 0, 0, 0.42);
+      }
+
+      .schedule-dialog__header {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 24px;
+        padding: 24px;
+        border-bottom: var(--page-rule);
+        background: var(--mcm-bg);
+      }
+
+      .schedule-dialog > .timeline {
+        margin-inline: 24px;
+        padding-bottom: 24px;
+      }
+
+      .spec-dialog .spec-panel {
+        padding: 24px;
+      }
+
+      .schedule-dialog__header h2 {
+        font-size: 1.45rem;
+        font-weight: 600;
+      }
+
+      .dialog-close {
+        min-height: 36px;
+        padding: 7px 12px;
+        border: var(--page-rule);
+        border-radius: 6px;
+        background: transparent;
+        color: var(--mcm-ink);
+        font: inherit;
+        font-weight: 500;
+        cursor: pointer;
       }
 
       .total-strip {
@@ -257,27 +671,107 @@
       }
 
       .total-strip strong {
-        font-size: 2rem;
+        font-size: 1.65rem;
         line-height: 1;
         letter-spacing: -0.03em;
         white-space: nowrap;
       }
 
       .footer-note {
-        grid-column: 3 / -1;
+        grid-column: 1 / -1;
+        width: 100%;
+        text-align: left;
         border-top: var(--page-rule);
         padding-top: 20px;
         color: var(--mcm-tertiary);
         font-size: 0.9rem;
       }
 
+      /* Compact five-step type scale: display, section, subhead, body, metadata. */
+      .kicker,
+      .eyebrow,
+      .summary-item span,
+      .cell-label,
+      .note-label,
+      .table th,
+      .calculator__intro p,
+      .calculator__hint,
+      .footer-note {
+        font-size: 0.8rem;
+      }
+
+      .lead,
+      .section-heading p,
+      .table td,
+      .spec-list dt,
+      .spec-list dd,
+      .note p,
+      .timeline__item {
+        font-size: 0.9rem;
+      }
+
+      .section-heading h2,
+      .schedule-dialog__header h2,
+      .total-strip strong,
+      .calculator__total strong {
+        font-size: 1.4rem;
+      }
+
+      .pricing-group h3,
+      .calculator__intro h3,
+      .spec-panel h4 {
+        font-size: 1rem;
+        font-weight: 600;
+      }
+
+      .summary-item strong {
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+
       @media (prefers-color-scheme: dark) {
+        :root {
+          --table-divider: rgba(255, 255, 255, 0.08);
+        }
+
+        body.mcm-page {
+          background: #000000;
+        }
+
+        .app-shell {
+          --mcm-bg: #000000;
+          --mcm-surface: #0b0d10;
+          --mcm-surface-raised: #14171c;
+          --mcm-ink: #d1d5db;
+          --mcm-interaction: #ffffff;
+          --mcm-muted: #9299a3;
+          --mcm-tertiary: #626b77;
+          --mcm-line: rgba(255, 255, 255, 0.16);
+          --mcm-line-strong: rgba(255, 255, 255, 0.28);
+          --mcm-accent: #ff4b22;
+          --mcm-success: #32d46d;
+          --mcm-alert: #ff4d2e;
+          color-scheme: dark;
+        }
+
+        .masthead {
+          background: color-mix(in srgb, var(--mcm-bg) 94%, transparent);
+        }
+
         .logo--light {
           display: none;
         }
 
         .logo--dark {
           display: block;
+        }
+
+        .quantity-input {
+          caret-color: var(--mcm-interaction);
+        }
+
+        .schedule-dialog::backdrop {
+          background: rgba(0, 0, 0, 0.72);
         }
       }
 
@@ -290,6 +784,23 @@
           --mcm-section-space-tight: 56px;
         }
 
+        body.mcm-page {
+          padding: 0;
+          background: var(--mcm-bg);
+        }
+
+        .app-shell {
+          border-radius: 0;
+        }
+
+        .app-shell main {
+          display: block;
+        }
+
+        .side-nav {
+          display: none;
+        }
+
         .masthead__inner,
         .hero__kicker,
         .hero__content,
@@ -297,6 +808,15 @@
         .section-body,
         .footer-note {
           grid-column: 1 / -1;
+        }
+
+        #pricing .section-heading {
+          display: block;
+          margin-bottom: 28px;
+        }
+
+        #pricing .section-heading p:last-child {
+          margin-top: 12px;
         }
 
         .masthead__inner {
@@ -314,23 +834,46 @@
           flex-wrap: wrap;
         }
 
+        .masthead__nav {
+          display: flex;
+          width: 100%;
+          margin-left: 0;
+          padding: 12px 0 0;
+          border-left: 0;
+          border-top: var(--page-rule);
+        }
+
+        .masthead {
+          position: static;
+          padding-block: 24px 0;
+        }
+
         .hero {
           padding-block: 52px 64px;
         }
 
+        .section-heading {
+          position: static;
+        }
+
         .hero h1 {
           max-width: 9ch;
-          font-size: 3.8rem;
+          font-size: 2.5rem;
         }
 
         .lead {
-          font-size: 1.2rem;
+          font-size: 0.9rem;
         }
 
         .summary-row,
         .quote-block,
-        .note-grid {
+        .note-grid,
+        .calculator__totals {
           grid-template-columns: 1fr;
+        }
+
+        .calculator__intro {
+          display: grid;
         }
 
         .summary-item {
@@ -366,6 +909,11 @@
           white-space: normal;
         }
 
+        #terms .table td:first-child {
+          width: 100%;
+          white-space: normal;
+        }
+
         .timeline__item {
           grid-template-columns: 1fr;
           gap: 6px;
@@ -383,141 +931,196 @@
     </style>
   </head>
   <body class="mcm-page">
+    <div class="app-shell">
     <header class="mcm-section masthead">
       <div class="mcm-section__inner masthead__inner">
-        <img class="logo logo--light" src="assets/dusty-times-logo-primary-black.png" alt="Dusty Times" />
-        <img class="logo logo--dark" src="assets/dusty-times-logo-primary-white.png" alt="Dusty Times" />
+        <img class="logo logo--light" src="assets/dusty-times-logo-primary-black.png" alt="Dusty Times">
+        <img class="logo logo--dark" src="assets/dusty-times-logo-primary-white.png" alt="Dusty Times">
         <div class="masthead__meta" aria-label="Quote metadata">
           <span>Red Planet Print Management</span>
           <span>Quote HH261106</span>
-          <span>11 June 2026</span>
+          <span>July 20</span>
         </div>
       </div>
     </header>
 
     <main>
-      <section class="mcm-section hero">
+      <div class="workspace">
+      <section class="mcm-section hero" id="summary">
         <div class="mcm-section__inner">
           <p class="hero__kicker kicker">Issue 08 production quote</p>
           <div class="hero__content">
             <h1>Print schedule and pricing</h1>
             <p class="lead">
               Lionel Marz proposed a production path that requires press-ready files by
-              <strong>26 July 2026</strong> to target final warehouse arrival on
-              <strong>2 November 2026</strong>, assuming no shipping delays.
+              <strong>August 18</strong> to target final warehouse arrival on
+              <strong>October 30</strong>, assuming no shipping delays.
             </p>
 
             <div class="summary-row" aria-label="Quote summary">
               <div class="summary-item">
                 <span>Base run</span>
                 <strong>2,000 copies</strong>
-              </div>
-              <div class="summary-item">
-                <span>Book unit price</span>
-                <strong>US$3.94</strong>
+                <button class="schedule-link" id="spec-trigger" type="button" aria-haspopup="dialog">Print specs</button>
               </div>
               <div class="summary-item">
                 <span>Production total</span>
-                <strong>US$21,572.50</strong>
+                <strong>$21,572.50</strong>
               </div>
               <div class="summary-item">
-                <span>Delivery basis</span>
-                <strong>DDU to Santa Fe Springs, CA</strong>
+                <span>Delivery date</span>
+                <strong>October 30</strong>
+                <button class="schedule-link" id="schedule-trigger" type="button" aria-haspopup="dialog">View schedule</button>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section class="mcm-section mcm-section--tight">
-        <div class="mcm-section__inner">
-          <div class="section-heading">
-            <p class="eyebrow">Timeline</p>
-            <h2>Proposed production schedule</h2>
-            <p>The schedule depends on timely file delivery and assumes no shipping delays.</p>
+      <dialog class="schedule-dialog" id="schedule-dialog" aria-labelledby="schedule-title">
+        <div class="schedule-dialog__header">
+          <div>
+            <p class="eyebrow">Delivery date · October 30</p>
+            <h2 id="schedule-title">Production schedule</h2>
           </div>
-          <div class="section-body">
-            <div class="timeline">
-              <div class="timeline__item">
-                <div class="timeline__date">26 July 2026</div>
-                <div class="timeline__label">Press-ready files supplied</div>
-              </div>
-              <div class="timeline__item">
-                <div class="timeline__date">2 August 2026</div>
-                <div class="timeline__label">PDF proofs supplied</div>
-              </div>
-              <div class="timeline__item">
-                <div class="timeline__date">12 August 2026</div>
-                <div class="timeline__label">Final proofs approved</div>
-              </div>
-              <div class="timeline__item">
-                <div class="timeline__date">20 September 2026</div>
-                <div class="timeline__label">Advance copies sent out</div>
-              </div>
-              <div class="timeline__item">
-                <div class="timeline__date">25 September 2026</div>
-                <div class="timeline__label">Advance copies approved and shipping date</div>
-              </div>
-              <div class="timeline__item">
-                <div class="timeline__date">5 October 2026</div>
-                <div class="timeline__label">Estimated departure from Shenzhen port</div>
-              </div>
-              <div class="timeline__item">
-                <div class="timeline__date">23 October 2026</div>
-                <div class="timeline__label">Estimated arrival at LAX port</div>
-              </div>
-              <div class="timeline__item">
-                <div class="timeline__date">2 November 2026</div>
-                <div class="timeline__label">Estimated arrival at final warehouse</div>
-              </div>
-            </div>
-          </div>
+          <button class="dialog-close" type="button">Close</button>
         </div>
-      </section>
+        <div class="timeline">
+          <div class="timeline__item"><div class="timeline__date">August 18</div><div class="timeline__label">Files supplied</div></div>
+          <div class="timeline__item"><div class="timeline__date">August 21</div><div class="timeline__label">PDF proofs sent</div></div>
+          <div class="timeline__item"><div class="timeline__date">August 23</div><div class="timeline__label">PDF proofs approved</div></div>
+          <div class="timeline__item"><div class="timeline__date">September 20</div><div class="timeline__label">Advance copies sent out</div></div>
+          <div class="timeline__item"><div class="timeline__date">September 24</div><div class="timeline__label">Advance copies approved</div></div>
+          <div class="timeline__item"><div class="timeline__date">September 24</div><div class="timeline__label">Shipping date</div></div>
+          <div class="timeline__item"><div class="timeline__date">October 04</div><div class="timeline__label">Estimated departure from Shenzhen port</div></div>
+          <div class="timeline__item"><div class="timeline__date">October 20</div><div class="timeline__label">Estimated arrival at LAX port</div></div>
+          <div class="timeline__item"><div class="timeline__date">October 30</div><div class="timeline__label">Estimated arrival at final warehouse</div></div>
+        </div>
+      </dialog>
 
-      <section class="mcm-section mcm-section--tight">
+      <section class="mcm-section mcm-section--tight" id="pricing">
         <div class="mcm-section__inner">
           <div class="section-heading">
             <p class="eyebrow">Quote</p>
-            <h2>Base production price</h2>
-            <p>Core book production is quoted DDU to Custom Wheelhouse’s Santa Fe Springs warehouse and includes the quoted cover upgrades.</p>
+            <h2>Pricing review</h2>
           </div>
           <div class="section-body">
             <div class="quote-block">
               <div>
+                <div class="pricing-group pricing-group--first">
+                  <h3>Book production</h3>
+                </div>
                 <table class="table" aria-label="Base quote line items">
+                  <tbody>
+                    <tr>
+                      <td>2,000 copies of Dusty Times</td>
+                      <td><span class="currency">$3.94</span> per copy</td>
+                      <td class="amount currency">$7,880.00</td>
+                    </tr>
+                    <tr>
+                      <td>Scratch-resistant matte laminated cover upgrade</td>
+                      <td><span class="currency">$0.12</span> per copy</td>
+                      <td class="amount currency">$240.00</td>
+                    </tr>
+                    <tr>
+                      <td>Embossing upgrade on front and back cover</td>
+                      <td><span class="currency">$163</span> die plus <span class="currency">$0.09</span> per copy</td>
+                      <td class="amount currency">$343.00</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="pricing-group">
+                <h3>Packaging</h3>
+                <table class="table" aria-label="Packaging charges">
+                  <tbody>
+                    <tr>
+                      <td>Standard shipper, 1,500 units</td>
+                      <td><span class="currency">$1.72</span> per copy</td>
+                      <td class="amount currency">$3,440.00</td>
+                    </tr>
+                    <tr>
+                      <td>VIP box, 500 units</td>
+                      <td><span class="currency">$11.34</span> per copy</td>
+                      <td class="amount currency">$5,670.00</td>
+                    </tr>
+                    <tr>
+                      <td>VIP shipping box</td>
+                      <td><span class="currency">$5.359</span> per copy</td>
+                      <td class="amount currency">$2,679.50</td>
+                    </tr>
+                    <tr>
+                      <td>Standard shipper container space</td>
+                      <td><span class="currency">$0.22</span> per copy</td>
+                      <td class="amount currency">$440.00</td>
+                    </tr>
+                    <tr>
+                      <td>VIP box container space</td>
+                      <td><span class="currency">$1.76</span> per copy</td>
+                      <td class="amount currency">$880.00</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="total-strip pricing-total">
+                <span>Quoted production total including packaging</span>
+                <strong class="currency">$21,572.50</strong>
+              </div>
+
+              <div class="calculator" aria-labelledby="airfreight-title">
+                <div class="calculator__intro">
+                  <h3 id="airfreight-title">Airfreight calculator</h3>
+                  <p>Enter the number of copies to send by air.</p>
+                </div>
+                <table class="table" aria-label="Estimated airfreight costs">
                   <thead>
                     <tr>
-                      <th scope="col">Line item</th>
-                      <th scope="col">Unit cost</th>
-                      <th scope="col" class="amount">Total</th>
+                      <th scope="col">Book type</th>
+                      <th scope="col">Cost per copy</th>
+                      <th scope="col">Copies by air</th>
+                      <th scope="col" class="amount">Airfreight total</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td>2,000 copies of Dusty Times</td>
-                      <td>US$3.94 per copy</td>
-                      <td class="amount">US$7,880.00</td>
+                      <td><strong>VIP book</strong></td>
+                      <td class="currency">$24.25</td>
+                      <td><input class="quantity-input" id="vip-quantity" aria-label="VIP copies" type="number" min="0" max="500" step="1" value="0" inputmode="numeric"></td>
+                      <td class="amount currency" id="vip-air-total">$0.00</td>
                     </tr>
                     <tr>
-                      <td>Scratch-resistant matte laminated cover upgrade</td>
-                      <td>US$0.12 per copy</td>
-                      <td class="amount">US$240.00</td>
-                    </tr>
-                    <tr>
-                      <td>Embossing upgrade on front and back cover</td>
-                      <td>US$163 die plus US$0.09 per copy</td>
-                      <td class="amount">US$343.00</td>
+                      <td><strong>Standard book</strong></td>
+                      <td class="currency">$12.85</td>
+                      <td><input class="quantity-input" id="standard-quantity" aria-label="Standard copies" type="number" min="0" max="1500" step="1" value="0" inputmode="numeric"></td>
+                      <td class="amount currency" id="standard-air-total">$0.00</td>
                     </tr>
                   </tbody>
                 </table>
-                <div class="total-strip">
-                  <span>Base production total including cover upgrades</span>
-                  <strong>US$8,463.00</strong>
+                <div class="calculator__totals" aria-live="polite">
+                  <div class="calculator__total">
+                    <span>Additional airfreight subtotal</span>
+                    <strong class="currency" id="airfreight-total">$0.00</strong>
+                  </div>
+                  <div class="calculator__total calculator__total--grand">
+                    <span>Production + airfreight grand total</span>
+                    <strong class="currency" id="combined-total">$21,572.50</strong>
+                  </div>
                 </div>
+                <p class="calculator__hint">Estimate only. Quantities are capped at the quoted run of 500 VIP and 1,500 standard copies.</p>
               </div>
 
-              <dl class="spec-list" aria-label="Production specifications">
+              <dialog class="schedule-dialog spec-dialog" id="spec-dialog" aria-labelledby="spec-title">
+                <div class="schedule-dialog__header">
+                  <div>
+                    <p class="eyebrow">Issue 08</p>
+                    <h2 id="spec-title">Print specs</h2>
+                  </div>
+                  <button class="dialog-close" type="button">Close</button>
+                </div>
+                <div class="spec-panel">
+                  <dl class="spec-list" aria-label="Production specifications">
                 <div>
                   <dt>Trim size</dt>
                   <dd>9 by 12 inches landscape, 230 by 305 mm</dd>
@@ -546,75 +1149,30 @@
                   <dt>Proofing</dt>
                   <dd>One set of online high-resolution proofs plus one blank dummy book for approval</dd>
                 </div>
-              </dl>
+                  </dl>
+                  <h4>Packaging details</h4>
+                  <div class="note-grid">
+                    <div class="note">
+                      <span class="note-label">Standard shipper</span>
+                      <p>Sturdy cardboard self-shipper with single-color artwork inside and outside, designed to hold one shrink-wrapped book.</p>
+                    </div>
+                    <div class="note">
+                      <span class="note-label">VIP box</span>
+                      <p>Commemorative clamshell box with imitation-leather paper wrap, foil stamping, lined interior, tray, EVA insert, velvet, and screen printing.</p>
+                    </div>
+                    <div class="note">
+                      <span class="note-label">Sponsor versioning</span>
+                      <p>Lionel suggests two VIP self-shipper versions: 250 Dusty Times branded and 250 co-branded with Hella.</p>
+                    </div>
+                  </div>
+                </div>
+              </dialog>
             </div>
           </div>
         </div>
       </section>
 
-      <section class="mcm-section mcm-section--tight">
-        <div class="mcm-section__inner">
-          <div class="section-heading">
-            <p class="eyebrow">Packaging</p>
-            <h2>Packaging charges</h2>
-            <p>These packaging costs are included in the production total shown above.</p>
-          </div>
-          <div class="section-body">
-            <table class="table" aria-label="Packaging charges">
-              <thead>
-                <tr>
-                  <th scope="col">Item</th>
-                  <th scope="col">Basis</th>
-                  <th scope="col" class="amount">Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Standard shipper, 1,500 units</td>
-                  <td>US$1.72 per copy to produce the box</td>
-                  <td class="amount">US$3,440.00</td>
-                </tr>
-                <tr>
-                  <td>Standard shipper container space</td>
-                  <td>US$0.22 per copy</td>
-                  <td class="amount">US$440.00</td>
-                </tr>
-                <tr>
-                  <td>VIP box, 500 units</td>
-                  <td>US$11.34 per copy</td>
-                  <td class="amount">US$5,670.00</td>
-                </tr>
-                <tr>
-                  <td>VIP shipping box</td>
-                  <td>US$5.359 per copy</td>
-                  <td class="amount">US$2,679.50</td>
-                </tr>
-                <tr>
-                  <td>VIP box container space</td>
-                  <td>US$1.76 per copy</td>
-                  <td class="amount">US$880.00</td>
-                </tr>
-              </tbody>
-            </table>
-            <div class="note-grid">
-              <div class="note">
-                <span class="note-label">Standard shipper</span>
-                <p>Sturdy cardboard self-shipper with single-color artwork inside and outside, designed to hold one shrink-wrapped book.</p>
-              </div>
-              <div class="note">
-                <span class="note-label">VIP box</span>
-                <p>Commemorative clamshell box with imitation-leather paper wrap, foil stamping, lined interior, tray, EVA insert, velvet, and screen printing.</p>
-              </div>
-              <div class="note">
-                <span class="note-label">Sponsor versioning</span>
-                <p>Lionel suggests two VIP self-shipper versions: 250 Dusty Times branded and 250 co-branded with Hella.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="mcm-section mcm-section--tight">
+      <section class="mcm-section mcm-section--tight" id="terms">
         <div class="mcm-section__inner">
           <div class="section-heading">
             <p class="eyebrow">Terms</p>
@@ -637,7 +1195,7 @@
                 </tr>
                 <tr>
                   <td><strong>Validity</strong></td>
-                  <td>Quote valid for 30 days from 11 June 2026, subject to review if raw material, ocean freight, exchange rate, or related costs move significantly.</td>
+                  <td>Quote valid for 30 days from June 11, subject to review if raw material, ocean freight, exchange rate, or related costs move significantly.</td>
                 </tr>
                 <tr>
                   <td><strong>Quantity tolerance</strong></td>
@@ -648,14 +1206,60 @@
           </div>
         </div>
       </section>
-    </main>
-
-    <footer class="mcm-section mcm-section--tight">
-      <div class="mcm-section__inner">
-        <p class="footer-note">
-          Source: Red Planet Print Management production schedule and attached PDF quotation, “Custom Wheel House - Dusty Times - HH - 11 June 2026.pdf.” Prepared as an internal summary page.
-        </p>
+        <footer class="mcm-section mcm-section--tight">
+          <div class="mcm-section__inner">
+            <p class="footer-note">
+              Source: Red Planet Print Management production schedule and attached PDF quotation dated June 11. Prepared as an internal summary page.
+            </p>
+          </div>
+        </footer>
       </div>
-    </footer>
-  </body>
-</html>
+    </main>
+    </div>
+    <script>
+      const productionTotal = 21572.5;
+      const rows = [
+        { input: document.querySelector("#vip-quantity"), output: document.querySelector("#vip-air-total"), rate: 24.25 },
+        { input: document.querySelector("#standard-quantity"), output: document.querySelector("#standard-air-total"), rate: 12.85 },
+      ];
+      const number = new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const currency = (value) => `$${number.format(value)}`;
+
+      function updateAirfreight() {
+        let airfreight = 0;
+        rows.forEach(({ input, output, rate }) => {
+          const quantity = Math.max(0, Math.min(Number(input.max), Math.floor(Number(input.value) || 0)));
+          const lineTotal = quantity * rate;
+          output.textContent = currency(lineTotal);
+          airfreight += lineTotal;
+        });
+        document.querySelector("#airfreight-total").textContent = currency(airfreight);
+        document.querySelector("#combined-total").textContent = currency(productionTotal + airfreight);
+      }
+
+      rows.forEach(({ input }) => input.addEventListener("input", updateAirfreight));
+
+      const specDialog = document.querySelector("#spec-dialog");
+      const specTrigger = document.querySelector("#spec-trigger");
+      const specClose = specDialog.querySelector(".dialog-close");
+
+      specTrigger.addEventListener("click", () => specDialog.showModal());
+      specClose.addEventListener("click", () => specDialog.close());
+      specDialog.addEventListener("click", (event) => {
+        if (event.target === specDialog) specDialog.close();
+      });
+
+      const scheduleDialog = document.querySelector("#schedule-dialog");
+      const scheduleTrigger = document.querySelector("#schedule-trigger");
+      const scheduleClose = scheduleDialog.querySelector(".dialog-close");
+
+      scheduleTrigger.addEventListener("click", () => scheduleDialog.showModal());
+      scheduleClose.addEventListener("click", () => scheduleDialog.close());
+      scheduleDialog.addEventListener("click", (event) => {
+        if (event.target === scheduleDialog) scheduleDialog.close();
+      });
+    </script>
+
+
+
+</body></html>
