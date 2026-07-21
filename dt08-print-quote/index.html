@@ -142,7 +142,6 @@
 
       .masthead__inner {
         align-items: center;
-        border-bottom: var(--page-rule);
         min-height: 72px;
       }
 
@@ -391,6 +390,10 @@
         border-bottom-color: var(--table-divider);
       }
 
+      .table tbody tr:last-child td {
+        border-bottom: 0;
+      }
+
       .table td:first-child,
       .table th:first-child {
         padding-right: 28px;
@@ -498,6 +501,10 @@
         gap: 24px;
         padding: 14px 0;
         border-top: var(--page-rule);
+      }
+
+      .calculator__total:first-child {
+        border-top: 0;
       }
 
       .calculator__total span {
@@ -681,7 +688,6 @@
         grid-column: 1 / -1;
         width: 100%;
         text-align: left;
-        border-top: var(--page-rule);
         padding-top: 20px;
         color: var(--mcm-tertiary);
         font-size: 0.9rem;
@@ -784,6 +790,10 @@
           --mcm-section-space-tight: 56px;
         }
 
+        .app-shell .mcm-section {
+          --mcm-page-gutter: 20px;
+        }
+
         body.mcm-page {
           padding: 0;
           background: var(--mcm-bg);
@@ -881,10 +891,7 @@
         }
 
         .table,
-        .table tbody,
-        .table tr,
-        .table th,
-        .table td {
+        .table tbody {
           display: block;
         }
 
@@ -893,25 +900,116 @@
         }
 
         .table tr {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          column-gap: 20px;
+          row-gap: 6px;
           padding: 18px 0;
           border-bottom: var(--page-rule);
         }
 
+        .table tbody tr:last-child {
+          border-bottom: 0;
+        }
+
         .table td {
+          display: block;
           border: 0;
           padding: 4px 0;
+        }
+
+        #pricing .table td {
+          padding: 4px 0;
+        }
+
+        #pricing .table:not([aria-label="Estimated airfreight costs"]) td:first-child {
+          grid-column: 1 / -1;
+          padding-right: 0;
+          color: var(--mcm-ink);
+        }
+
+        #pricing .table:not([aria-label="Estimated airfreight costs"]) td:nth-child(2) {
+          grid-column: 1;
+        }
+
+        #pricing .table:not([aria-label="Estimated airfreight costs"]) .amount {
+          grid-column: 2;
+          text-align: right;
+        }
+
+        #pricing table[aria-label="Estimated airfreight costs"] tr {
+          grid-template-columns: minmax(76px, 1fr) 68px minmax(84px, 1fr);
+          column-gap: 16px;
+          align-items: end;
+        }
+
+        #pricing table[aria-label="Estimated airfreight costs"] td:first-child {
+          grid-column: 1 / -1;
+          padding-right: 0;
+        }
+
+        #pricing table[aria-label="Estimated airfreight costs"] td:nth-child(2),
+        #pricing table[aria-label="Estimated airfreight costs"] td:nth-child(3),
+        #pricing table[aria-label="Estimated airfreight costs"] td:nth-child(4) {
+          display: grid;
+          gap: 5px;
+        }
+
+        #pricing table[aria-label="Estimated airfreight costs"] td:nth-child(2)::before {
+          content: "Per copy";
+        }
+
+        #pricing table[aria-label="Estimated airfreight costs"] td:nth-child(3)::before {
+          content: "Copies";
+        }
+
+        #pricing table[aria-label="Estimated airfreight costs"] td:nth-child(4)::before {
+          content: "Airfreight";
+        }
+
+        #pricing table[aria-label="Estimated airfreight costs"] td:nth-child(n + 2)::before {
+          color: var(--mcm-tertiary);
+          font-family: var(--mcm-font-sans);
+          font-size: 0.72rem;
+          font-weight: 500;
+          line-height: 1.2;
+          text-align: left;
+        }
+
+        #pricing table[aria-label="Estimated airfreight costs"] td:nth-child(4),
+        #pricing table[aria-label="Estimated airfreight costs"] td:nth-child(4)::before {
+          text-align: right;
         }
 
         .table .amount,
         .table .date {
           width: auto;
-          text-align: left;
+          text-align: right;
           white-space: normal;
         }
 
         #terms .table td:first-child {
-          width: 100%;
+          width: auto;
           white-space: normal;
+        }
+
+        #terms .table tr {
+          grid-template-columns: minmax(112px, 30%) minmax(0, 1fr);
+          align-items: start;
+        }
+
+        #terms .table td:first-child {
+          padding-right: 16px;
+        }
+
+        .total-strip {
+          grid-template-columns: minmax(0, 1fr) auto;
+          align-items: baseline;
+        }
+
+        .total-strip strong,
+        .calculator__total strong {
+          text-align: right;
         }
 
         .timeline__item {
@@ -928,6 +1026,23 @@
           display: grid;
         }
       }
+
+      @media (max-width: 520px) {
+        #terms .table tr {
+          grid-template-columns: 1fr;
+          gap: 6px;
+        }
+
+        #pricing table[aria-label="Estimated airfreight costs"] tr {
+          grid-template-columns: minmax(68px, 1fr) 68px minmax(76px, 1fr);
+          column-gap: 10px;
+        }
+
+        .calculator__total,
+        .total-strip {
+          grid-template-columns: minmax(0, 1fr) auto;
+        }
+      }
     </style>
   </head>
   <body class="mcm-page">
@@ -937,9 +1052,7 @@
         <img class="logo logo--light" src="assets/dusty-times-logo-primary-black.png" alt="Dusty Times">
         <img class="logo logo--dark" src="assets/dusty-times-logo-primary-white.png" alt="Dusty Times">
         <div class="masthead__meta" aria-label="Quote metadata">
-          <span>Red Planet Print Management</span>
-          <span>Quote HH261106</span>
-          <span>July 20</span>
+          <span>Last updated <time id="last-updated"></time></span>
         </div>
       </div>
     </header>
@@ -1217,6 +1330,13 @@
     </main>
     </div>
     <script>
+      const lastUpdated = new Date(document.lastModified);
+      document.querySelector("#last-updated").dateTime = lastUpdated.toISOString();
+      document.querySelector("#last-updated").textContent = new Intl.DateTimeFormat("en-US", {
+        month: "long",
+        day: "2-digit",
+      }).format(lastUpdated);
+
       const productionTotal = 21572.5;
       const rows = [
         { input: document.querySelector("#vip-quantity"), output: document.querySelector("#vip-air-total"), rate: 24.25 },
