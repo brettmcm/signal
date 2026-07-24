@@ -1,5 +1,15 @@
 # Open Dealer MCMDS landing page — design QA
 
+## Latest MCMDS refresh
+
+- Updated against MCMDS commit `7afec8c` (`Merge remote skill updates`).
+- Added the reusable `assets/mcmds.css` foundation and bundled Departure Mono font.
+- Replaced the earlier warm-neutral page palette with the canonical cool-neutral light and dark roles.
+- Applied role-based typography: Indivisible for display and editorial leads, Inter for interface and reading copy, and Departure Mono for step identifiers and technical readouts.
+- Reduced repeated section scale, decorative rules, and default dividers.
+- Rebuilt the process and integration groups around subtle adjacent surfaces and compact gutters.
+- Preserved the existing Open Dealer content, responsive structure, navigation, theme control, and conversion links.
+
 ## Comparison target
 
 - Source visual truth:
@@ -46,15 +56,17 @@ Additional focused evidence:
 
 ### Fonts and typography
 
-- Indivisible loaded successfully (`document.fonts.check(...) === true`).
+- Indivisible, Inter, and Departure Mono loaded successfully (`document.fonts.check(...) === true`).
+- Display headings and editorial leads use Indivisible; interface and reading copy use Inter; genuine technical metadata uses Departure Mono.
 - Display headings use medium weight, tight tracking, and sentence case.
-- Body, navigation, metadata, buttons, table content, and captions use normal tracking.
+- Body, navigation, ordinary metadata, buttons, table content, and captions use normal tracking.
 - Desktop and mobile wrapping is intentional and free of overlap or truncation.
 
 ### Spacing and layout rhythm
 
 - Shared gutters are `48px` desktop and `20px` mobile.
 - Major sections use the MCMDS `72px`/`112px`/`144px` rhythm.
+- Process and integration objects use the updated surface-first hierarchy with `4px` gutters instead of persistent divider architecture.
 - Desktop and mobile document widths match their viewports; horizontal overflow is `0`.
 - The comparison table becomes stacked mobile rows rather than horizontally scrolling.
 - Containment is limited to the operational inventory artifact and repeated integration cells.
@@ -62,6 +74,7 @@ Additional focused evidence:
 ### Colors and visual tokens
 
 - Both MCMDS light and dark palettes were rendered and checked.
+- Light roles use `#ffffff`, `#f7f8fa`, `#f2f4f7`, and `#30343b`; dark roles use `#000000`, `#050607`, `#0b0d10`, and `#d1d5db`.
 - Theme control successfully cycled system → light → dark → system.
 - Warm orange is limited to CTAs, emphasis, rules, and limited-state signals.
 - Acid lime is used only for the distribution-ready status.
