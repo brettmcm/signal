@@ -49,23 +49,7 @@ existing entries when the index changes.
 Keep the complete HTML package in a root folder and add its folder name to
 `publicHtml` in `signal.config.json`. Its URL will be `/<folder-name>/`.
 
-To protect it, move the folder name to `secureHtml`, create a password verifier
-with:
-
-```sh
-npm run password -- "shared password"
-```
-
-Add the result beneath that slug in the hosted `SIGNAL_PASSWORDS` JSON secret.
-Set `SIGNAL_SESSION_SECRET` to a separate long random value. Protected content
-must only be committed to a private repository.
-
-For local testing, place both values in `.dev.vars`:
-
-```text
-SIGNAL_PASSWORDS={"example-signal":{"salt":"…","hash":"…","iterations":310000}}
-SIGNAL_SESSION_SECRET=…
-```
+Standalone packages are public and are included in the static Vercel build.
 
 ## Develop
 
@@ -74,5 +58,16 @@ npm install
 npm run dev
 ```
 
-Run `npm run build` for the production build and `npm run deploy` to publish it
-with Cloudflare Workers.
+Run `npm run build` for the production build.
+
+## Deploy with Vercel
+
+Import the GitHub repository into Vercel using the Astro framework preset.
+Vercel will build and deploy pushes automatically. Set
+`signal.brettmcm.com` as the production domain in the Vercel project.
+
+For a manual production deployment, run:
+
+```sh
+npm run deploy
+```

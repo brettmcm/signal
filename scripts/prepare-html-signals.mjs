@@ -5,12 +5,6 @@ const root = resolve(import.meta.dirname, "..");
 const target = resolve(root, ".signal-public");
 const config = JSON.parse(await readFile(resolve(root, "signal.config.json"), "utf8"));
 const publicSignals = config.publicHtml ?? [];
-const secureSignals = config.secureHtml ?? [];
-const allSignals = [...publicSignals, ...secureSignals];
-
-if (new Set(allSignals).size !== allSignals.length) {
-  throw new Error("A standalone signal cannot be both public and secure.");
-}
 
 await rm(target, { recursive: true, force: true });
 await mkdir(target, { recursive: true });
@@ -20,11 +14,9 @@ await cp(
   resolve(target, "fonts/DepartureMono-Regular.woff"),
 );
 
-for (const slug of allSignals) {
+for (const slug of publicSignals) {
   if (!/^[a-z0-9][a-z0-9-]*$/.test(slug)) {
     throw new Error(`Invalid standalone signal slug: ${slug}`);
   }
   await cp(resolve(root, slug), resolve(target, slug), { recursive: true });
 }
-
-await cp(resolve(root, "CNAME"), resolve(target, "CNAME"));
