@@ -51,9 +51,11 @@
 }
 
 html {
+  height: 100%;
   min-height: 100%;
   background: var(--canvas);
   scroll-behavior: smooth;
+  touch-action: manipulation;
 }
 
 html::before {
@@ -91,7 +93,8 @@ html::before {
 }
 
 body {
-  min-height: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
   background: var(--canvas);
   color: var(--ink);
   font-family: var(--font-ui);
