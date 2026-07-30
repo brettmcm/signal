@@ -1,0 +1,412 @@
+<canvas
+  class="iridescent-terrain"
+  data-iridescent-terrain
+  aria-hidden="true"
+></canvas>
+
+<script>
+  const canvases = document.querySelectorAll<HTMLCanvasElement>(
+    "[data-iridescent-terrain]",
+  );
+
+  const vertexSource = `
+    attribute vec2 position;
+
+    void main() {
+      gl_Position = vec4(position, 0.0, 1.0);
+    }
+  `;
+
+  const fragmentSource = `
+    #extension GL_OES_standard_derivatives : enable
+    precision highp float;
+
+    uniform vec2 resolution;
+    uniform float time;
+    uniform vec2 pointer;
+
+    #define PI 3.14159265359
+    #define DITHER_LEVELS 100.0
+    #define DITHER_STRENGTH 7.5
+    #define DITHER_SCALE 4.0
+    #define SHADER_EXPOSURE -0.1
+    #define SHADER_CONTRAST 5.0
+
+    float hash(vec2 p) {
+      p = fract(p * vec2(123.34, 456.21));
+      p += dot(p, p + 45.32);
+      return fract(p.x * p.y);
+    }
+
+    float interleavedGradientNoise(vec2 pixel) {
+      return fract(
+        52.9829189 * fract(dot(pixel, vec2(0.06711056, 0.00583715)))
+      );
+    }
+
+    float noise(vec2 p) {
+      vec2 i = floor(p);
+      vec2 f = fract(p);
+      f = f * f * (3.0 - 2.0 * f);
+
+      return mix(
+        mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x),
+        mix(hash(i + vec2(0.0, 1.0)), hash(i + 1.0), f.x),
+        f.y
+      );
+    }
+
+    float fbm(vec2 p) {
+      float value = 0.0;
+      float amplitude = 0.52;
+      mat2 rotation = mat2(0.84, -0.54, 0.54, 0.84);
+
+      for (int i = 0; i < 5; i++) {
+        value += amplitude * noise(p);
+        p = rotation * p * 2.03 + 13.7;
+        amplitude *= 0.49;
+      }
+
+      return value;
+    }
+
+    vec3 palette(float t) {
+      vec3 a = vec3(0.76, 0.78, 0.82);
+      vec3 b = vec3(0.25, 0.22, 0.20);
+      vec3 c = vec3(1.00, 0.86, 0.68);
+      vec3 d = vec3(0.02, 0.18, 0.43);
+      return a + b * cos(6.28318 * (c * t + d));
+    }
+
+    float heightField(vec2 xz, float t) {
+      vec2 macro = vec2(
+        noise(xz * vec2(0.19, 0.14) + vec2(t * 0.035, 2.1)),
+        noise(xz * vec2(0.14, 0.21) + vec2(7.4, -t * 0.028))
+      );
+      vec2 warped = xz + (macro - 0.5) * vec2(1.35, 1.08);
+
+      float mountain =
+        0.54 * sin(warped.x * 0.78 + macro.y * 2.7) +
+        0.28 * sin(warped.x * 1.34 - warped.y * 0.31 + macro.x * 2.9) +
+        0.18 * sin(warped.y * 0.62 + warped.x * 0.38);
+      float billow = (noise(warped * vec2(0.24, 0.18)) - 0.5) * 0.42;
+      float corrugation =
+        sin(warped.y * 22.0 + warped.x * 2.2 + macro.x * 4.0) * 0.025;
+
+      return mountain + billow + corrugation;
+    }
+
+    vec3 surfaceNormal(vec2 xz, float t) {
+      float e = 0.012;
+      float left = heightField(xz - vec2(e, 0.0), t);
+      float right = heightField(xz + vec2(e, 0.0), t);
+      float back = heightField(xz - vec2(0.0, e), t);
+      float front = heightField(xz + vec2(0.0, e), t);
+      return normalize(vec3(left - right, 2.0 * e, back - front));
+    }
+
+    vec3 spectralEnvironment(vec3 direction, float offset) {
+      float horizon = direction.y * 0.5 + 0.5;
+      float angle = atan(direction.x, direction.z) / (2.0 * PI);
+      return palette(angle + horizon * 0.42 + offset);
+    }
+
+    void main() {
+      vec2 uv = gl_FragCoord.xy / resolution.xy;
+      vec2 screen = uv * 2.0 - 1.0;
+      screen.x *= resolution.x / resolution.y;
+
+      float t = time * 0.16;
+      vec2 pointerScreen = pointer * 2.0 - 1.0;
+      pointerScreen.x *= resolution.x / resolution.y;
+      vec2 rippleCenterA = vec2(-0.46 + 0.14 * sin(time * 0.13), 0.22);
+      vec2 rippleCenterB = vec2(0.62, -0.38 + 0.12 * cos(time * 0.17));
+      float rippleDistanceA = length(screen - rippleCenterA);
+      float rippleDistanceB = length(screen - rippleCenterB);
+      float pointerDistance = length(screen - pointerScreen);
+      float lensWaveA = sin(rippleDistanceA * 11.0 - time * 0.82);
+      float lensWaveB = sin(rippleDistanceB * 8.2 + time * 0.61);
+      float pointerWave = sin(pointerDistance * 14.0 - time * 1.05);
+      float rollingWave = sin(screen.y * 4.4 + screen.x * 1.15 - time * 0.52);
+      float lensEnvelope = smoothstep(1.7, 0.05, rippleDistanceA);
+      float pointerLens = exp(-pointerDistance * 1.65);
+      vec2 radialA = normalize(screen - rippleCenterA + vec2(0.0001));
+      vec2 radialB = normalize(screen - rippleCenterB + vec2(0.0001));
+      vec2 pointerRadial = normalize(screen - pointerScreen + vec2(0.0001));
+      vec2 lensOffset = vec2(
+        radialA.x * lensWaveA * 0.105 + radialB.x * lensWaveB * 0.072,
+        radialA.y * lensWaveA * 0.105 + radialB.y * lensWaveB * 0.072
+      );
+      lensOffset += vec2(rollingWave * 0.035, lensWaveA * rollingWave * 0.028);
+      lensOffset +=
+        pointerRadial *
+        pointerWave *
+        pointerLens *
+        (0.12 + 0.08 * sin(time * 0.37));
+      lensOffset *= 0.58 + lensEnvelope * 0.72;
+      vec2 distortedScreen = screen + lensOffset;
+
+      vec3 rayOrigin = vec3(0.0, 2.55, 2.35);
+      vec3 target = vec3(0.0, -0.28, -0.42);
+      vec3 forward = normalize(target - rayOrigin);
+      vec3 right = normalize(cross(forward, vec3(0.0, 1.0, 0.0)));
+      vec3 up = cross(right, forward);
+      vec3 rayDirection = normalize(
+        forward + distortedScreen.x * right * 0.43 + distortedScreen.y * up * 0.43
+      );
+
+      float travel = 0.0;
+      float previousTravel = 0.0;
+      bool hit = false;
+
+      for (int i = 0; i < 96; i++) {
+        vec3 samplePoint = rayOrigin + rayDirection * travel;
+        float distanceToSurface = samplePoint.y - heightField(samplePoint.xz, t);
+
+        if (distanceToSurface < 0.0) {
+          hit = true;
+          break;
+        }
+
+        previousTravel = travel;
+        travel += clamp(distanceToSurface * 0.30, 0.018, 0.18);
+        if (travel > 15.0) break;
+      }
+
+      for (int i = 0; i < 5; i++) {
+        float midpoint = (previousTravel + travel) * 0.5;
+        vec3 samplePoint = rayOrigin + rayDirection * midpoint;
+        if (samplePoint.y > heightField(samplePoint.xz, t)) {
+          previousTravel = midpoint;
+        } else {
+          travel = midpoint;
+        }
+      }
+
+      vec3 position = rayOrigin + rayDirection * travel;
+      vec3 normal = surfaceNormal(position.xz, t);
+      vec3 viewDirection = -rayDirection;
+      vec3 lightDirection = normalize(vec3(-0.72, 0.82, 0.38));
+      vec3 halfVector = normalize(lightDirection + viewDirection);
+
+      float diffuse = max(dot(normal, lightDirection), 0.0);
+      float specular = pow(max(dot(normal, halfVector), 0.0), 46.0);
+      float broadSpecular = pow(max(dot(normal, halfVector), 0.0), 7.0);
+      float fresnel = pow(1.0 - max(dot(normal, viewDirection), 0.0), 3.1);
+      float occlusion = smoothstep(-0.95, 0.65, position.y);
+
+      float flow = noise(position.xz * vec2(0.28, 0.19) + vec2(2.4, -1.7));
+      float phase = position.z * 22.0 + position.x * 1.8 + flow * 4.2;
+      float band = abs(fract(phase) - 0.5);
+      float fineLine = smoothstep(0.455, 0.495, band);
+      float ridgeLight = exp(-42.0 * abs(fract(phase + 0.12) - 0.5));
+
+      float material = position.y * 0.23 + flow * 0.72 + position.x * 0.08;
+      float pearlTone =
+        0.54 +
+        flow * 0.26 +
+        smoothstep(-0.65, 0.88, position.y) * 0.16 -
+        smoothstep(0.42, 0.84, -normal.x) * 0.10;
+      vec3 pearl = vec3(pearlTone);
+
+      vec3 reflectedDirection = reflect(rayDirection, normal);
+      float pointerDispersion = pointerLens * (0.08 + 0.07 * pointerWave);
+      vec3 refractedR = refract(
+        rayDirection,
+        normal,
+        1.0 / (1.25 - pointerDispersion)
+      );
+      vec3 refractedG = refract(rayDirection, normal, 1.0 / 1.38);
+      vec3 refractedB = refract(
+        rayDirection,
+        normal,
+        1.0 / (1.52 + pointerDispersion)
+      );
+      vec3 sampleR = spectralEnvironment(
+        refractedR,
+        material + 0.28 + pointerDispersion * 2.2
+      );
+      vec3 sampleG = spectralEnvironment(refractedG, material);
+      vec3 sampleB = spectralEnvironment(
+        refractedB,
+        material - 0.31 - pointerDispersion * 2.2
+      );
+      vec3 dispersion = vec3(
+        dot(sampleR, vec3(0.299, 0.587, 0.114)),
+        dot(sampleG, vec3(0.299, 0.587, 0.114)),
+        dot(sampleB, vec3(0.299, 0.587, 0.114))
+      );
+      vec3 reflectionSample = spectralEnvironment(reflectedDirection, material + 0.08);
+      float reflectedLuma = dot(reflectionSample, vec3(0.299, 0.587, 0.114));
+      vec3 reflection = vec3(reflectedLuma);
+      float rollingCaustic =
+        pow(0.5 + 0.5 * lensWaveA, 8.0) * 0.48 +
+        pow(0.5 + 0.5 * lensWaveB, 10.0) * 0.34 +
+        pow(0.5 + 0.5 * rollingWave, 12.0) * 0.28 +
+        pow(0.5 + 0.5 * pointerWave, 10.0) * pointerLens * 0.62;
+      vec3 lensSpectrum = vec3(
+        smoothstep(0.20, 0.74, rollingCaustic + lensWaveA * 0.28),
+        smoothstep(0.24, 0.78, rollingCaustic + lensWaveB * 0.08),
+        smoothstep(0.18, 0.70, rollingCaustic - lensWaveA * 0.28)
+      );
+
+      vec3 color = pearl * (0.38 + diffuse * 0.72) * (0.72 + occlusion * 0.28);
+      color = mix(color, dispersion, 0.30 + fresnel * 0.48);
+      color = mix(color, reflection, fresnel * 0.44 + broadSpecular * 0.12);
+      color += dispersion * broadSpecular * 0.34;
+      color += lensSpectrum * rollingCaustic * (0.28 + fresnel * 0.52);
+      color += vec3(1.0) * specular * 0.92;
+      color += dispersion * fresnel * 0.38;
+      color += vec3(1.0) * ridgeLight * 0.16;
+
+      float ink = fineLine * (0.20 + 0.34 * (1.0 - diffuse));
+      color = mix(color, vec3(0.13), ink);
+
+      if (!hit) {
+        float fallbackTone = 0.60 + 0.15 * rollingWave + 0.10 * lensWaveA;
+        color = vec3(fallbackTone) + lensSpectrum * rollingCaustic * 0.44;
+      }
+
+      color = pow(max(color, 0.0), vec3(0.92));
+      color *= exp2(SHADER_EXPOSURE);
+      color = (color - 0.5) * SHADER_CONTRAST + 0.5;
+      vec2 ditherPixel = floor(gl_FragCoord.xy / DITHER_SCALE);
+      float dither =
+        (interleavedGradientNoise(ditherPixel) - 0.5) * DITHER_STRENGTH;
+      color = floor(
+        clamp(color, 0.0, 1.0) * DITHER_LEVELS + dither + 0.5
+      ) / DITHER_LEVELS;
+      color = clamp(color, 0.0, 1.0);
+
+      gl_FragColor = vec4(color, 1.0);
+    }
+  `;
+
+  const init = (canvas: HTMLCanvasElement) => {
+    const gl = canvas.getContext("webgl", {
+      alpha: false,
+      antialias: false,
+      powerPreference: "high-performance",
+    });
+
+    if (!gl) {
+      canvas.classList.add("iridescent-terrain--fallback");
+      return;
+    }
+
+    gl.getExtension("OES_standard_derivatives");
+
+    const compileShader = (type: number, source: string) => {
+      const shader = gl.createShader(type);
+      if (!shader) return null;
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        console.error(gl.getShaderInfoLog(shader));
+        gl.deleteShader(shader);
+        return null;
+      }
+
+      return shader;
+    };
+
+    const vertexShader = compileShader(gl.VERTEX_SHADER, vertexSource);
+    const fragmentShader = compileShader(gl.FRAGMENT_SHADER, fragmentSource);
+    const program = gl.createProgram();
+
+    if (!vertexShader || !fragmentShader || !program) {
+      canvas.classList.add("iridescent-terrain--fallback");
+      return;
+    }
+
+    gl.attachShader(program, vertexShader);
+    gl.attachShader(program, fragmentShader);
+    gl.linkProgram(program);
+
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      console.error(gl.getProgramInfoLog(program));
+      canvas.classList.add("iridescent-terrain--fallback");
+      return;
+    }
+
+    const buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array([-1, -1, 3, -1, -1, 3]),
+      gl.STATIC_DRAW,
+    );
+
+    gl.useProgram(program);
+    const position = gl.getAttribLocation(program, "position");
+    gl.enableVertexAttribArray(position);
+    gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+
+    const resolutionLocation = gl.getUniformLocation(program, "resolution");
+    const timeLocation = gl.getUniformLocation(program, "time");
+    const pointerLocation = gl.getUniformLocation(program, "pointer");
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const pointer = { x: 0.5, y: 0.5 };
+    let visible = true;
+    let frame = 0;
+    let start = performance.now();
+
+    const resize = () => {
+      const bounds = canvas.getBoundingClientRect();
+      const scale = Math.min(window.devicePixelRatio || 1, 1.75);
+      const width = Math.max(1, Math.round(bounds.width * scale));
+      const height = Math.max(1, Math.round(bounds.height * scale));
+
+      if (canvas.width !== width || canvas.height !== height) {
+        canvas.width = width;
+        canvas.height = height;
+        gl.viewport(0, 0, width, height);
+      }
+    };
+
+    const draw = (now: number) => {
+      resize();
+      gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+      gl.uniform1f(timeLocation, reducedMotion.matches ? 0 : (now - start) / 1000);
+      gl.uniform2f(pointerLocation, pointer.x, pointer.y);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+      if (visible && !reducedMotion.matches) {
+        frame = requestAnimationFrame(draw);
+      }
+    };
+
+    canvas.addEventListener("pointermove", (event) => {
+      const bounds = canvas.getBoundingClientRect();
+      pointer.x = (event.clientX - bounds.left) / bounds.width;
+      pointer.y = 1 - (event.clientY - bounds.top) / bounds.height;
+    });
+
+    canvas.addEventListener("pointerleave", () => {
+      pointer.x = 0.5;
+      pointer.y = 0.5;
+    });
+
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      cancelAnimationFrame(frame);
+      if (visible) {
+        start = performance.now();
+        frame = requestAnimationFrame(draw);
+      }
+    });
+
+    const redraw = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(draw);
+    };
+
+    observer.observe(canvas);
+    reducedMotion.addEventListener("change", redraw);
+    window.addEventListener("resize", redraw, { passive: true });
+    draw(performance.now());
+  };
+
+  canvases.forEach(init);
+</script>

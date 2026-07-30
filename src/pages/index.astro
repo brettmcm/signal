@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import IridescentTerrain from "../components/IridescentTerrain.astro";
 import SignalRow from "../components/SignalRow.astro";
 import { getPublishedSignals } from "../lib/signals";
 
@@ -8,7 +9,9 @@ const signals = await getPublishedSignals();
 ---
 
 <BaseLayout>
-  <div slot="before-header" class="home-visual" aria-hidden="true"></div>
+  <div slot="before-header" class="home-visual" aria-hidden="true">
+    <IridescentTerrain />
+  </div>
   <section
     class="signal-index-list"
     aria-label="Published signals"
@@ -18,4 +21,3 @@ const signals = await getPublishedSignals();
     </div>
   </section>
 </BaseLayout>
-

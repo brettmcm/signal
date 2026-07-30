@@ -63,6 +63,14 @@ const socialImage = image ? new URL(image, Astro.site) : undefined;
       </main>
     </div>
     <script>
+      let navigationTimer: number | undefined;
+
+      window.addEventListener("pageshow", () => {
+        window.clearTimeout(navigationTimer);
+        navigationTimer = undefined;
+        document.documentElement.classList.remove("is-leaving");
+      });
+
       document.addEventListener("click", (event) => {
         if (
           event.defaultPrevented ||
@@ -87,9 +95,10 @@ const socialImage = image ? new URL(image, Astro.site) : undefined;
         }
 
         event.preventDefault();
+        window.clearTimeout(navigationTimer);
         document.documentElement.classList.add("is-leaving");
 
-        window.setTimeout(() => {
+        navigationTimer = window.setTimeout(() => {
           window.location.href = link.href;
         }, 360);
       });

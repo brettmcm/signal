@@ -246,25 +246,37 @@ input {
   width: calc(50vw - (1.5 * var(--gutter)));
   overflow: hidden;
   isolation: isolate;
-  background: var(--ink);
+  filter: saturate(0);
+  mix-blend-mode: darken;
+  border: 0.5px solid var(--muted);
 }
 
-.ascii-noise {
+.iridescent-terrain {
   position: absolute;
   inset: 0;
+  display: block;
   width: 100%;
   height: 100%;
-  background: #ffffff;
-  image-rendering: pixelated;
+  /* cursor: crosshair; */
+}
+
+.iridescent-terrain--fallback {
+  background:
+    repeating-radial-gradient(
+      ellipse at 35% 70%,
+      transparent 0 8px,
+      rgb(48 28 61 / 38%) 9px,
+      transparent 10px 14px
+    ),
+    radial-gradient(circle at 22% 18%, #c8f5df 0, transparent 34%),
+    radial-gradient(circle at 78% 35%, #f3b6ed 0, transparent 42%),
+    linear-gradient(145deg, #e9eb9f, #aca7d2 58%, #8adbd8);
 }
 
 @media (prefers-color-scheme: dark) {
   .home-visual {
-    background: black;
-  }
-
-  .ascii-noise {
-    background: #000000;
+      filter: invert(1) saturate(0);
+      mix-blend-mode: lighten;
   }
 
 }
