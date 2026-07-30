@@ -70,6 +70,25 @@ html::before {
   animation: signal-noise 800ms steps(2, end) infinite;
 }
 
+@media (max-width: 700px) {
+  html::before {
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 12%,
+      #000 30%,
+      #000 70%,
+      transparent 88%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 12%,
+      #000 30%,
+      #000 70%,
+      transparent 88%
+    );
+  }
+}
+
 @keyframes signal-noise {
   0% {
     transform: translate3d(0, 0, 0);
