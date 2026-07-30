@@ -248,7 +248,7 @@ input {
   isolation: isolate;
   filter: saturate(0);
   mix-blend-mode: darken;
-  border: 0.5px solid var(--muted);
+  /* border: 0.5px solid var(--muted); */
 }
 
 .iridescent-terrain {

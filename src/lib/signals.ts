@@ -8,18 +8,24 @@ export type NumberedSignal = Signal & {
 export async function getPublishedSignals() {
   const signals = await getCollection("signals", ({ data }) => !data.draft);
 
-  return signals
-    .sort((a, b) => {
-      const dateDifference =
-        a.data.publishedAt.valueOf() - b.data.publishedAt.valueOf();
+  const duplicateNumbers = signals
+    .map((signal) => signal.data.signalNumber)
+    .filter((number, index, numbers) => numbers.indexOf(number) !== index);
 
-      return dateDifference || a.id.localeCompare(b.id);
-    })
-    .map((signal, index) => ({
+  if (duplicateNumbers.length > 0) {
+    throw new Error(
+      `Duplicate signal number${duplicateNumbers.length === 1 ? "" : "s"}: ${[
+        ...new Set(duplicateNumbers),
+      ].join(", ")}`,
+    );
+  }
+
+  return signals
+    .map((signal) => ({
       ...signal,
-      signalNumber: String(index + 1).padStart(3, "0"),
+      signalNumber: String(signal.data.signalNumber).padStart(3, "0"),
     }))
-    .reverse();
+    .sort((a, b) => b.data.signalNumber - a.data.signalNumber);
 }
 
 export function signalPath(signal: Signal) {

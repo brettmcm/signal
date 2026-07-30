@@ -5,6 +5,7 @@ import { z } from "astro/zod";
 const signals = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/signals" }),
   schema: z.object({
+    signalNumber: z.number().int().positive(),
     title: z.string(),
     description: z.string(),
     publishedAt: z.coerce.date(),

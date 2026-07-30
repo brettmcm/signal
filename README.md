@@ -10,6 +10,7 @@ the public URL.
 
 ```md
 ---
+signalNumber: 4
 title: "A useful title"
 description: "A concise description."
 publishedAt: 2026-07-29
@@ -32,7 +33,7 @@ so its component, metadata, and local assets stay together.
 
 To add one:
 
-1. Use the parent Signal’s automatically assigned three-digit number.
+1. Use the parent Signal’s manually assigned three-digit number.
 2. Copy an existing Capsule folder and assign the next number within that
    Signal.
 3. Update `meta.ts`, then build the Capsule in `index.astro`.
@@ -40,8 +41,7 @@ To add one:
    should align with.
 
 Capsules display in a right-hand rail on wide screens and inline in the article
-on narrower screens. Signal numbers follow publication order, while Capsule
-numbers are set in their metadata.
+on narrower screens. Signal and Capsule numbers are both set in their metadata.
 
 ## Publish standalone HTML
 
