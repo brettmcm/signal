@@ -577,7 +577,7 @@ input {
   }
 
   .signal-index-list {
-    padding-top: 24px;
+    padding-top: 0;
   }
 
   .signal-row a {
