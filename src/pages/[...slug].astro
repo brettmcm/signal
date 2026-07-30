@@ -1,0 +1,93 @@
+---
+import { render } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getPublishedSignals, signalPath } from "../lib/signals";
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const signals = await getPublishedSignals();
+  return signals.map((signal) => ({
+    params: { slug: signalPath(signal).slice(1, -1) },
+    props: { signal },
+  }));
+}
+
+const { signal } = Astro.props;
+const { Content } = await render(signal);
+---
+
+<BaseLayout
+  title={signal.data.title}
+  description={signal.data.description}
+  image={signal.data.image}
+  article
+>
+  <article class="article">
+    <header class="article-header">
+      <div class="article-heading">
+        <p class="article-meta">
+          <span aria-label={`Signal ${signal.data.signalNumber}`}>
+            {signal.data.signalNumber}
+          </span>
+        </p>
+        <h1>{signal.data.title}</h1>
+      </div>
+    </header>
+    <div class="article-body">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>
+
+<script>
+  const articleBody = document.querySelector<HTMLElement>(".article-body");
+
+  if (articleBody) {
+    let layoutFrame = 0;
+
+    const layoutCapsules = () => {
+      window.cancelAnimationFrame(layoutFrame);
+      layoutFrame = window.requestAnimationFrame(() => {
+        const capsules = [
+          ...articleBody.querySelectorAll<HTMLElement>("[data-capsule]"),
+        ];
+
+        articleBody.style.minHeight = "";
+        capsules.forEach((capsule) => {
+          capsule.style.top = "";
+        });
+
+        const railIsActive = capsules.some(
+          (capsule) => getComputedStyle(capsule).position === "absolute",
+        );
+
+        if (!railIsActive || capsules.length === 0) return;
+
+        const naturalHeight = articleBody.offsetHeight;
+        const gap = 32;
+        let railBottom = 0;
+
+        capsules.forEach((capsule) => {
+          const naturalTop = capsule.offsetTop;
+          const centeredTop = naturalTop - capsule.offsetHeight / 2;
+          const top = Math.max(centeredTop, railBottom, 0);
+          capsule.style.top = `${top}px`;
+          railBottom = top + capsule.offsetHeight + gap;
+        });
+
+        articleBody.style.minHeight = `${Math.max(naturalHeight, railBottom - gap)}px`;
+      });
+    };
+
+    const observer = new ResizeObserver(layoutCapsules);
+    observer.observe(articleBody);
+    articleBody.querySelectorAll<HTMLElement>("[data-capsule]").forEach((capsule) => {
+      observer.observe(capsule);
+    });
+
+    window.addEventListener("resize", layoutCapsules);
+    window.addEventListener("load", layoutCapsules, { once: true });
+    layoutCapsules();
+  }
+</script>

@@ -1,0 +1,89 @@
+---
+import CapsuleFrame from "../../../components/CapsuleFrame.astro";
+import { metadata } from "./meta";
+---
+
+<CapsuleFrame metadata={metadata}>
+  <div class="motion-study" data-motion-study>
+    <p class="motion-study__value" aria-live="polite">Thought</p>
+    <div class="motion-study__track" aria-hidden="true">
+      <span class="is-active"></span>
+      <span></span>
+      <span></span>
+    </div>
+    <button type="button">Move the idea forward</button>
+  </div>
+</CapsuleFrame>
+
+<script>
+  const stages = ["Thought", "Experiment", "Artifact"];
+
+  document.querySelectorAll<HTMLElement>("[data-motion-study]").forEach((study) => {
+    if (study.dataset.ready === "true") return;
+    study.dataset.ready = "true";
+
+    const value = study.querySelector<HTMLElement>(".motion-study__value");
+    const steps = [...study.querySelectorAll<HTMLElement>(".motion-study__track span")];
+    const button = study.querySelector<HTMLButtonElement>("button");
+    let activeIndex = 0;
+
+    button?.addEventListener("click", () => {
+      activeIndex = (activeIndex + 1) % stages.length;
+      if (value) value.textContent = stages[activeIndex];
+      steps.forEach((step, index) => {
+        step.classList.toggle("is-active", index <= activeIndex);
+      });
+    });
+  });
+</script>
+
+<style>
+  .motion-study {
+    display: flex;
+    padding: 3em;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .motion-study__value {
+    color: var(--interaction);
+    font-family: var(--font-display);
+    font-size: 17px;
+    line-height: 1.2;
+  }
+
+  .motion-study__track {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    margin-top: 18px;
+  }
+
+  .motion-study__track span {
+    height: 2px;
+    background: var(--line);
+    transition: background-color var(--fast);
+  }
+
+  .motion-study__track span.is-active {
+    background: var(--accent);
+  }
+
+  button {
+    margin-top: 18px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 11px;
+    text-decoration: underline;
+    text-decoration-color: var(--tertiary);
+    text-underline-offset: 4px;
+  }
+
+  button:hover {
+    color: var(--interaction);
+    text-decoration-color: var(--accent);
+  }
+</style>

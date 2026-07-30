@@ -1,0 +1,21 @@
+---
+import type { Signal } from "../lib/signals";
+import { signalPath } from "../lib/signals";
+
+interface Props {
+  signal: Signal;
+}
+
+const { signal } = Astro.props;
+---
+
+<article class="signal-row">
+  <a href={signalPath(signal)}>
+    <span class="signal-index" aria-label={`Signal ${signal.data.signalNumber}`}>
+      {signal.data.signalNumber}
+    </span>
+    <span class="signal-copy">
+      <span class="signal-title">{signal.data.title}</span>
+    </span>
+  </a>
+</article>

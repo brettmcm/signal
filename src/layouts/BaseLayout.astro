@@ -1,0 +1,94 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  article?: boolean;
+}
+
+const {
+  title,
+  description = "Thoughts, experiments, writing, and useful artifacts from Brett McMillin.",
+  image,
+  article = false,
+} = Astro.props;
+
+const pageTitle = title ? `${title} — Signal` : "Signal — Brett McMillin";
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const socialImage = image ? new URL(image, Astro.site) : undefined;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" type="application/rss+xml" title="Signal" href="/rss.xml" />
+    <link rel="preconnect" href="https://use.typekit.net" />
+    <link rel="stylesheet" href="https://use.typekit.net/shq4xoc.css" />
+    <meta property="og:type" content={article ? "article" : "website"} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {socialImage && <meta property="og:image" content={socialImage} />}
+    <meta name="twitter:card" content={socialImage ? "summary_large_image" : "summary"} />
+    <title>{pageTitle}</title>
+  </head>
+  <body class:list={{ "is-article-page": article }}>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div class="site-shell">
+      <header class="site-header">
+        <a
+          class:list={["site-name", { "site-name--interior": article }]}
+          href="/"
+          aria-label={article ? "Back to index" : "Signal home"}
+        >
+          {article && <span class="site-back-indicator" aria-hidden="true">←</span>}
+          <span>{article ? "Index" : "Signal"}</span>
+        </a>
+      </header>
+      <main id="main-content">
+        <slot />
+      </main>
+    </div>
+    <script>
+      document.addEventListener("click", (event) => {
+        if (
+          event.defaultPrevented ||
+          event.button !== 0 ||
+          event.metaKey ||
+          event.ctrlKey ||
+          event.shiftKey ||
+          event.altKey
+        ) {
+          return;
+        }
+
+        const link = (event.target as Element).closest<HTMLAnchorElement>("a[href]");
+        if (
+          !link ||
+          link.target === "_blank" ||
+          link.hasAttribute("download") ||
+          link.origin !== window.location.origin ||
+          link.hash && link.pathname === window.location.pathname
+        ) {
+          return;
+        }
+
+        event.preventDefault();
+        document.documentElement.classList.add("is-leaving");
+
+        window.setTimeout(() => {
+          window.location.href = link.href;
+        }, 360);
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,28 @@
+{
+  "name": "signal",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prepare:signals": "node scripts/prepare-html-signals.mjs",
+    "dev": "npm run prepare:signals && ASTRO_TELEMETRY_DISABLED=1 WRANGLER_LOG_PATH=.wrangler/logs/wrangler.log astro dev",
+    "build": "npm run prepare:signals && ASTRO_TELEMETRY_DISABLED=1 WRANGLER_LOG_PATH=.wrangler/logs/wrangler.log astro build",
+    "preview": "npm run prepare:signals && ASTRO_TELEMETRY_DISABLED=1 WRANGLER_LOG_PATH=.wrangler/logs/wrangler.log astro preview",
+    "check": "ASTRO_TELEMETRY_DISABLED=1 WRANGLER_LOG_PATH=.wrangler/logs/wrangler.log astro check",
+    "password": "node scripts/create-password-verifier.mjs",
+    "deploy": "npm run build && wrangler deploy"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "latest",
+    "@astrojs/mdx": "latest",
+    "@astrojs/rss": "latest",
+    "@astrojs/sitemap": "latest",
+    "astro": "latest"
+  },
+  "devDependencies": {
+    "@astrojs/check": "latest",
+    "@cloudflare/workers-types": "^5.20260729.1",
+    "typescript": "latest",
+    "wrangler": "latest"
+  }
+}

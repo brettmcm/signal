@@ -1,0 +1,12 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+export const prerender = true;
+---
+<BaseLayout title="Not found">
+  <section class="not-found">
+    <p class="index-kicker">Signal lost</p>
+    <h1>This page isn’t transmitting.</h1>
+    <p>It may have moved, expired, or never existed.</p>
+    <a href="/">Return to Signal</a>
+  </section>
+</BaseLayout>

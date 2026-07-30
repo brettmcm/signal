@@ -1,0 +1,19 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SignalRow from "../components/SignalRow.astro";
+import { getPublishedSignals } from "../lib/signals";
+
+export const prerender = true;
+const signals = await getPublishedSignals();
+---
+
+<BaseLayout>
+  <section
+    class="signal-index-list"
+    aria-label="Published signals"
+  >
+    <div class="signal-list">
+      {signals.map((signal) => <SignalRow signal={signal} />)}
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,54 @@
+---
+import {
+  capsuleLabel,
+  type CapsuleMetadata,
+} from "../lib/capsules";
+
+interface Props {
+  metadata: CapsuleMetadata;
+}
+
+const { metadata } = Astro.props;
+const label = capsuleLabel(metadata);
+---
+
+<aside
+  class="signal-capsule"
+  aria-label={metadata.title ? `${label}: ${metadata.title}` : label}
+  data-capsule
+  data-signal-number={metadata.signalNumber}
+  data-capsule-number={metadata.capsuleNumber}
+>
+  <div class="signal-capsule__content">
+    <slot />
+  </div>
+  <p class="signal-capsule__caption">{label}</p>
+</aside>
+
+<style>
+  .signal-capsule {
+    color: var(--ink);
+  }
+
+  .signal-capsule__content {
+    display: flex;
+    min-width: 0;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--canvas);
+  }
+
+  .signal-capsule__caption {
+    margin-top: 10px;
+    padding: 0;
+    color: var(--tertiary);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1.4;
+  }
+
+  .signal-capsule__content > :global(*) {
+    width: 100%;
+  }
+</style>

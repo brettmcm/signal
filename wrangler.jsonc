@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "signal",
+  "compatibility_date": "2026-07-29",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "./src/worker.ts",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  },
+  "observability": {
+    "enabled": true
+  }
+}
