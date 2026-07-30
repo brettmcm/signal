@@ -8,15 +8,14 @@ const signals = await getPublishedSignals();
 ---
 
 <BaseLayout>
-  <div class="home-layout">
-    <div class="home-visual" aria-hidden="true"></div>
-    <section
-      class="signal-index-list"
-      aria-label="Published signals"
-    >
-      <div class="signal-list">
-        {signals.map((signal) => <SignalRow signal={signal} />)}
-      </div>
-    </section>
-  </div>
+  <div slot="before-header" class="home-visual" aria-hidden="true"></div>
+  <section
+    class="signal-index-list"
+    aria-label="Published signals"
+  >
+    <div class="signal-list">
+      {signals.map((signal) => <SignalRow signal={signal} />)}
+    </div>
+  </section>
 </BaseLayout>
+

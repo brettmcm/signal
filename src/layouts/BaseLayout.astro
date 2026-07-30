@@ -47,6 +47,7 @@ const socialImage = image ? new URL(image, Astro.site) : undefined;
   <body class:list={{ "is-article-page": article }}>
     <a class="skip-link" href="#main-content">Skip to content</a>
     <div class="site-shell">
+      <slot name="before-header" />
       <header class="site-header">
         <a
           class:list={["site-name", { "site-name--interior": article }]}

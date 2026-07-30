@@ -24,7 +24,7 @@
   --gutter: clamp(20px, 4vw, 44px);
   --home-title-offset: 24.75px;
   --fast: 140ms ease;
-  --noise-opacity: 0.12;
+  --noise-opacity: 0.2;
 }
 
 @font-face {
@@ -47,7 +47,7 @@
     --tertiary: #626b77;
     --line: rgb(209 213 219 / 14%);
     --accent: #ff4b22;
-    --noise-opacity: 0.09;
+    --noise-opacity: 0.14;
   }
 }
 
@@ -102,6 +102,8 @@ body {
   font-size: 16px;
   line-height: 1.5;
   text-rendering: optimizeLegibility;
+  user-select: none;
+  -webkit-user-select: none;
   -webkit-font-smoothing: antialiased;
   animation: signal-page-enter 460ms 80ms ease backwards;
   transition: opacity 360ms ease;
@@ -233,7 +235,7 @@ input {
 }
 
 .signal-index-list {
-  padding: 72px var(--gutter) 0;
+  padding: 50px var(--gutter) 0;
 }
 
 .home-visual {
@@ -242,8 +244,29 @@ input {
   right: var(--home-title-offset);
   bottom: var(--home-title-offset);
   width: calc(50vw - (1.5 * var(--gutter)));
+  overflow: hidden;
+  isolation: isolate;
   background: var(--ink);
-  border-radius: 2px;
+}
+
+.ascii-noise {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  image-rendering: pixelated;
+}
+
+@media (prefers-color-scheme: dark) {
+  .home-visual {
+    background: black;
+  }
+
+  .ascii-noise {
+    background: #000000;
+  }
+
 }
 
 .signal-row a {
@@ -312,12 +335,12 @@ input {
 
 .article {
   min-width: 0;
-  padding: 72px var(--gutter) 0;
+  padding: 50px var(--gutter) 0;
 }
 
 .article-header {
   min-height: 0;
-  padding-top: 20px;
+  padding-top: 10px;
 }
 
 .article-heading {
@@ -543,27 +566,23 @@ input {
     display: none;
   }
 
-  .home-layout {
-    display: flex;
-    flex-direction: column;
-  }
-
   .home-visual {
-    position: static;
-    order: 1;
-    width: auto;
+    position: relative;
+    inset: auto;
+    width: calc(100% - (2 * var(--gutter)));
     height: 40vh;
-    margin-inline: var(--gutter);
+    margin-top: var(--gutter);
+    margin-right: var(--gutter);
+    margin-left: var(--gutter);
   }
 
   .signal-index-list {
-    order: 2;
-    padding-top: 48px;
+    padding-top: 24px;
   }
 
   .signal-row a {
     grid-template-columns: auto minmax(0, 1fr);
-    min-height: 48px;
+    min-height: 34px;
     gap: 10px;
   }
 
