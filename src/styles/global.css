@@ -9,7 +9,7 @@
 :root {
   color-scheme: light dark;
   --canvas: #ffffff;
-  --surface-subtle: #f7f8fa;
+  --surface-subtle: #fafbfc;
   --surface: #f2f4f7;
   --surface-raised: #ffffff;
   --ink: #30343b;
@@ -23,7 +23,7 @@
   --font-mono: "Departure Mono", "SFMono-Regular", Consolas, monospace;
   --gutter: clamp(20px, 4vw, 44px);
   --fast: 140ms ease;
-  --noise-opacity: 0.14;
+  --noise-opacity: 0.12;
 }
 
 @font-face {
@@ -37,7 +37,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --canvas: #000000;
-    --surface-subtle: #090b0e;
+    --surface-subtle: #050607;
     --surface: #0b0d10;
     --surface-raised: #14171c;
     --ink: #d1d5db;
@@ -46,7 +46,7 @@
     --tertiary: #626b77;
     --line: rgb(209 213 219 / 14%);
     --accent: #ff4b22;
-    --noise-opacity: 0.14;
+    --noise-opacity: 0.09;
   }
 }
 
@@ -242,9 +242,9 @@ input {
   align-items: center;
   width: fit-content;
   max-width: 100%;
-  min-height: 56px;
+  min-height: 34px;
   margin-inline: -8px;
-  padding: 10px 8px;
+  padding: 6px 8px;
   border-radius: 4px;
   text-decoration: none;
   transition:
@@ -278,7 +278,7 @@ input {
   color: var(--interaction);
   font-size: 14px;
   font-weight: 400;
-  opacity: 0.8;
+  opacity: 0.7;
   transition: opacity var(--fast);
 }
 
@@ -345,6 +345,15 @@ input {
   margin-top: 1.5em;
 }
 
+.article-body h1 {
+  margin-top: 3.5em;
+  color: var(--interaction);
+  font-size: 1.15em;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+}
+
 .article-body h2 {
   margin-top: 3.5em;
   color: var(--interaction);
@@ -400,18 +409,38 @@ input {
   font-size: 0.8em;
 }
 
-.article-body pre {
+.article-body .astro-code {
   margin-block: 2.5em;
   padding: 24px;
   overflow-x: auto;
-  border-radius: 6px;
+  border-radius: 3px;
+  border: 1px solid rgba(127,127,127,0.1);
   background: var(--surface-subtle);
+  color: var(--ink);
   font-size: 14px;
+  line-height: 1.6;
+  tab-size: 2;
 }
 
-.article-body pre code {
+.article-body .astro-code span {
+  color: var(--shiki-light);
+}
+
+.article-body .astro-code code {
   padding: 0;
   background: transparent;
+  font: inherit;
+}
+
+.article-body .astro-code .line {
+  display: inline-block;
+  min-width: 100%;
+}
+
+@media (prefers-color-scheme: dark) {
+  .article-body .astro-code span {
+    color: var(--shiki-dark);
+  }
 }
 
 .signal-note {
@@ -509,7 +538,7 @@ input {
 
   .signal-row a {
     grid-template-columns: auto minmax(0, 1fr);
-    min-height: 64px;
+    min-height: 48px;
     gap: 10px;
   }
 

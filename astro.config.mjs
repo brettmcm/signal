@@ -7,6 +7,15 @@ export default defineConfig({
   output: "static",
   publicDir: ".signal-public",
   trailingSlash: "always",
+  markdown: {
+    shikiConfig: {
+      themes: {
+        light: "github-light",
+        dark: "github-dark",
+      },
+      defaultColor: false,
+    },
+  },
   devToolbar: {
     enabled: false,
   },
