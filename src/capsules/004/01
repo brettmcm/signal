@@ -1,0 +1,8 @@
+---
+import CapsuleFrame from "../../../components/CapsuleFrame.astro";
+import { metadata } from "./meta";
+---
+
+<CapsuleFrame metadata={metadata}>
+  
+</CapsuleFrame>

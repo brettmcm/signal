@@ -172,7 +172,7 @@ input {
   gap: 24px;
   color: var(--tertiary);
   font-size: 12px;
-  padding-inline: var(--gutter);
+  padding: var(--gutter);
 }
 
 .site-header {
