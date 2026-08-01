@@ -235,7 +235,7 @@ input {
 }
 
 .signal-index-list {
-  padding: 50px var(--gutter) 0;
+  padding: 0 var(--gutter);
 }
 
 .home-visual {
