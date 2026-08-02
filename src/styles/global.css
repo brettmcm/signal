@@ -352,7 +352,7 @@ input {
 
 .article {
   min-width: 0;
-  padding: 50px var(--gutter) 0;
+  padding: 50px var(--gutter);
 }
 
 .article-header {

@@ -66,17 +66,38 @@ const { Content } = await render(signal);
 
         const naturalHeight = articleBody.offsetHeight;
         const gap = 32;
+        const railBottomClearance = 50;
         let railBottom = 0;
 
         capsules.forEach((capsule) => {
-          const naturalTop = capsule.offsetTop;
-          const centeredTop = naturalTop - capsule.offsetHeight / 2;
+          const citation = capsule.previousElementSibling instanceof HTMLElement &&
+            capsule.previousElementSibling.matches("[data-capsule-citation]")
+              ? capsule.previousElementSibling
+              : null;
+          const anchorTop = citation
+            ? citation.offsetTop + citation.offsetHeight / 2
+            : capsule.offsetTop;
+          const centeredTop = anchorTop - capsule.offsetHeight / 2;
           const top = Math.max(centeredTop, railBottom, 0);
           capsule.style.top = `${top}px`;
+
+          if (citation) {
+            const citationRect = citation.getBoundingClientRect();
+            const capsuleRect = capsule.getBoundingClientRect();
+            citation.style.setProperty(
+              "--capsule-connector-width",
+              `${Math.max(capsuleRect.left - citationRect.right, 0)}px`,
+            );
+            citation.style.zIndex = "1";
+          }
+
           railBottom = top + capsule.offsetHeight + gap;
         });
 
-        articleBody.style.minHeight = `${Math.max(naturalHeight, railBottom - gap)}px`;
+        articleBody.style.minHeight = `${Math.max(
+          naturalHeight,
+          railBottom - gap + railBottomClearance,
+        )}px`;
       });
     };
 
