@@ -1,0 +1,46 @@
+---
+import CapsuleFrame from "../../../components/CapsuleFrame.astro";
+import { metadata } from "./meta";
+
+const branches = [
+  { file: "DESIGN.md", note: "Universal rules", state: "Always" },
+  { file: "BRAND.md", note: "Taste and identity", state: "When needed" },
+  { file: "CREATIVE-DIRECTION.md", note: "Signal and evidence", state: "When useful" },
+  { file: "CHANNELS/", note: "Production constraints", state: "By medium" },
+  { file: "assets/", note: "Fonts, marks, CSS", state: "In output" },
+];
+---
+
+<CapsuleFrame metadata={metadata}>
+  <div class="skill-map">
+    <header>
+      <span class="pulse" aria-hidden="true"></span>
+      <div>
+        <p>MCMDS</p>
+        <span>Minimal core</span>
+      </div>
+    </header>
+    <ol>
+      {branches.map((branch) => (
+        <li>
+          <div><strong>{branch.file}</strong><span>{branch.note}</span></div>
+          <small>{branch.state}</small>
+        </li>
+      ))}
+    </ol>
+  </div>
+</CapsuleFrame>
+
+<style>
+  .skill-map { min-height: 380px; padding: 28px; color: var(--ink); background: var(--canvas); }
+  header { display: flex; align-items: center; gap: 12px; }
+  .pulse { width: 7px; height: 7px; flex: 0 0 auto; border-radius: 50%; background: var(--accent); }
+  header p { color: var(--interaction); font: 500 14px/18px var(--font-ui); }
+  header span:not(.pulse) { color: var(--tertiary); font: 400 10px/15px var(--font-mono); }
+  ol { display: grid; gap: 0; margin-top: 36px; padding: 0; list-style: none; }
+  li { display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 54px; }
+  li div { display: grid; gap: 3px; }
+  strong { color: var(--interaction); font: 500 12px/16px var(--font-mono); }
+  li span { color: var(--muted); font: 400 11px/15px var(--font-ui); }
+  small { color: var(--tertiary); font: 400 9px/14px var(--font-mono); white-space: nowrap; }
+</style>
