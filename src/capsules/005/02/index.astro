@@ -1,0 +1,101 @@
+---
+import CapsuleFrame from "../../../components/CapsuleFrame.astro";
+import { metadata } from "./meta";
+
+const assets = [
+  { name: "Primary mark", file: "mark-primary.svg", status: "Ready" },
+  { name: "Wordmark", file: "wordmark.svg", status: "Review" },
+  { name: "App icon", file: "app-icon.png", status: "Review" },
+];
+---
+
+<CapsuleFrame metadata={metadata}>
+  <div class="workspace" data-asset-review>
+    <header>
+      <div>
+        <p>Northline identity</p>
+        <span>3 assets</span>
+      </div>
+      <button class="add" type="button" aria-label="Add asset">+</button>
+    </header>
+
+    <section aria-label="Identity assets">
+      <p class="section-label">Assets</p>
+      <div class="asset-list">
+        {assets.map((asset, index) => (
+          <button class:list={["asset", { selected: index === 1 }]} type="button" aria-pressed={index === 1 ? "true" : "false"}>
+            <span class="preview" aria-hidden="true"><i></i><i></i></span>
+            <span class="asset-copy"><strong>{asset.name}</strong><small>{asset.file}</small></span>
+            <span class="asset-status">{asset.status}</span>
+          </button>
+        ))}
+      </div>
+    </section>
+
+    <footer>
+      <p><span aria-hidden="true"></span><strong data-selection-name>Wordmark</strong> selected</p>
+      <button class="approve" type="button">Approve</button>
+    </footer>
+  </div>
+</CapsuleFrame>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-asset-review]").forEach((review) => {
+    const rows = [...review.querySelectorAll<HTMLButtonElement>(".asset")];
+    const selectedName = review.querySelector<HTMLElement>("[data-selection-name]");
+
+    rows.forEach((row) => {
+      row.addEventListener("click", () => {
+        rows.forEach((item) => {
+          const active = item === row;
+          item.classList.toggle("selected", active);
+          item.setAttribute("aria-pressed", String(active));
+        });
+        const name = row.querySelector("strong")?.textContent;
+        if (selectedName && name) selectedName.textContent = name;
+      });
+    });
+  });
+</script>
+
+<style>
+  .workspace { min-height: 430px; display: grid; grid-template-rows: auto 1fr auto; padding: 20px; color: var(--ink); background: var(--surface-subtle); font-family: var(--font-ui); }
+  header { display: flex; align-items: center; justify-content: space-between; }
+  header div { display: grid; gap: 2px; }
+  header p { color: var(--interaction); font-size: 13px; font-weight: 500; line-height: 17px; }
+  header span { color: var(--tertiary); font: 400 9px/13px var(--font-mono); }
+  button { border: 0; font: inherit; }
+  .add { width: 28px; height: 28px; border-radius: 4px; background: transparent; color: var(--muted); cursor: pointer; font-size: 18px; font-weight: 300; }
+  .add:hover, .add:focus-visible { background: var(--surface); color: var(--interaction); }
+  section { align-self: center; }
+  .section-label { margin-bottom: 10px; color: var(--tertiary); font: 400 9px/13px var(--font-mono); }
+  .asset-list { display: grid; gap: 3px; }
+  .asset { width: 100%; min-height: 66px; display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px; border-radius: 4px; background: var(--canvas); color: var(--ink); cursor: pointer; text-align: left; }
+  .asset:hover:not(.selected) { background: var(--surface); }
+  .asset.selected { background: var(--interaction); color: var(--canvas); }
+  .preview { width: 44px; height: 44px; display: grid; place-content: center; gap: 4px; border-radius: 3px; background: var(--surface); }
+  .preview i { display: block; width: 18px; height: 3px; background: var(--tertiary); }
+  .preview i:last-child { width: 12px; }
+  .selected .preview { background: color-mix(in srgb, var(--canvas) 14%, transparent); }
+  .selected .preview i { background: var(--canvas); }
+  .asset-copy { min-width: 0; display: grid; gap: 3px; }
+  .asset-copy strong { overflow: hidden; color: inherit; font-size: 12px; font-weight: 500; line-height: 16px; text-overflow: ellipsis; white-space: nowrap; }
+  .asset-copy small { overflow: hidden; color: var(--tertiary); font: 400 9px/13px var(--font-mono); text-overflow: ellipsis; white-space: nowrap; }
+  .selected .asset-copy small { color: color-mix(in srgb, var(--canvas) 62%, transparent); }
+  .asset-status { color: var(--tertiary); font: 400 9px/13px var(--font-mono); }
+  .selected .asset-status { color: var(--canvas); }
+  footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  footer p { display: flex; align-items: center; gap: 7px; color: var(--tertiary); font: 400 9px/13px var(--font-mono); }
+  footer p > span { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+  footer strong { color: var(--muted); font-weight: 400; }
+  .approve { padding: 7px 10px; border-radius: 4px; background: var(--interaction); color: var(--canvas); cursor: pointer; font-size: 10px; font-weight: 500; line-height: 14px; }
+  .approve:hover { opacity: 0.8; }
+
+  @media (max-width: 420px) {
+    .workspace { min-height: 400px; padding: 16px; }
+    .asset { grid-template-columns: 40px minmax(0, 1fr); min-height: 62px; }
+    .preview { width: 40px; height: 40px; }
+    .asset-status { display: none; }
+    footer p { max-width: 190px; }
+  }
+</style>
