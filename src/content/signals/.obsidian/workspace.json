@@ -175,8 +175,7 @@
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
-      "bases:Create new base": false,
-      "markdown-importer:Open format converter": false
+      "bases:Create new base": false
     }
   },
   "active": "11f69abe960d3efe",
