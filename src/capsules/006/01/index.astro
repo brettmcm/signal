@@ -52,7 +52,7 @@ const events = [
 
       <section class="section events-section" aria-label="Events remaining today">
         <p class="summary has-items">You have <strong data-event-summary>2 events</strong> remaining today</p>
-        <p class="summary empty"><span class="cup" aria-hidden="true">♨</span> You have <strong>no events</strong> remaining today</p>
+        <p class="summary empty"><span class="cup" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.25 7.25h7.5v3.1a3.15 3.15 0 0 1-3.15 3.15h-1.2a3.15 3.15 0 0 1-3.15-3.15v-3.1Z"/><path d="M10.75 8.25h.75a1.75 1.75 0 0 1 0 3.5h-1.2M2 14.5h10.5M5.25 5.25c-1-1 .9-1.55 0-2.65M8 5.25c-1-1 .9-1.55 0-2.65"/></svg></span> You have <strong>no events</strong> remaining today</p>
         <div class="rows">
           {events.map((event, index) => (
             <div class="row event-row" data-event-index={index}>
@@ -133,9 +133,9 @@ const events = [
 </script>
 
 <style>
-  .nearterm-capsule { --panel-bg: #000; --primary: #dbdbdb; --secondary: #a8a8a8; --tertiary: #6e6e6e; --content: #6e6e6e; --rail: rgb(161 161 161 / 15%); --control-bg: #0b0d10; display: grid; justify-items: center; gap: 22px; padding: 24px 18px 32px; overflow: hidden; background: var(--surface-subtle); font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .nearterm-capsule { --panel-bg: #000; --primary: #dbdbdb; --secondary: #a8a8a8; --tertiary: #6e6e6e; --content: #6e6e6e; --rail: rgb(161 161 161 / 15%); --control-bg: #0b0d10; width: 100%; min-width: 0; display: grid; justify-items: center; gap: 22px; padding: 24px 18px 32px; overflow: hidden; background: var(--surface-subtle); font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
   .nearterm-capsule[data-theme="light"] { --panel-bg: #fff; --primary: #1c1c1c; --secondary: #6e6e6e; --tertiary: #6e6e6e; --content: #1c1c1c; --rail: rgb(161 161 161 / 15%); }
-  .nearterm-controls { width: min(100%, 360px); display: flex; align-items: center; justify-content: space-between; gap: 14px; color: var(--muted); font: 500 10px/14px var(--font-ui); }
+  .nearterm-controls { width: 100%; max-width: 360px; min-width: 0; display: flex; align-items: center; justify-content: space-between; gap: 14px; color: var(--muted); font: 500 10px/14px var(--font-ui); }
   .appearance, .count-controls, .stepper { display: flex; align-items: center; }
   .appearance { gap: 2px; padding: 2px; border-radius: 6px; background: var(--surface); }
   .appearance button, .stepper button { border: 0; background: transparent; color: var(--tertiary); cursor: pointer; }
@@ -150,7 +150,7 @@ const events = [
   .stepper button:hover:not(:disabled), .stepper button:focus-visible { background: var(--surface); color: var(--interaction); }
   .stepper button:disabled { cursor: default; opacity: .25; }
   .stepper output { min-width: 9px; color: var(--interaction); text-align: center; }
-  .popover { position: relative; width: 360px; height: 422px; padding: 32px; border-radius: 12px; background: var(--panel-bg); box-shadow: 0 18px 46px rgb(0 0 0 / 24%), 0 2px 8px rgb(0 0 0 / 18%); color: var(--primary); transition: background-color 180ms ease, color 180ms ease; }
+  .popover { position: relative; width: 100%; max-width: 360px; height: 422px; padding: 32px; border-radius: 12px; background: var(--panel-bg); box-shadow: 0 18px 46px rgb(0 0 0 / 24%), 0 2px 8px rgb(0 0 0 / 18%); color: var(--primary); transition: background-color 180ms ease, color 180ms ease; }
   .panel-header { display: flex; align-items: center; }
   .panel-header p { display: flex; gap: 4px; margin: 0; color: var(--primary); font-size: 13px; line-height: 17px; }
   .panel-header strong, .summary strong, .row strong { font-weight: 600; }
@@ -160,7 +160,8 @@ const events = [
   .summary.empty { display: none; }
   .section.is-empty .summary.has-items, .section.is-empty .rows { display: none; }
   .section.is-empty .summary.empty { display: flex; }
-  .cup, .check { width: 14px; color: var(--secondary); font-size: 12px; text-align: center; }
+  .cup, .check { width: 14px; flex: 0 0 14px; color: var(--secondary); font-size: 12px; text-align: center; }
+  .cup svg { width: 14px; height: 14px; display: block; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.15; }
   .rows { display: grid; gap: 8px; margin-top: 12px; }
   .row { min-height: 20px; display: grid; grid-template-columns: 20px minmax(0,1fr); align-items: center; gap: 4px; padding: 2px 0 2px 12px; background-image: linear-gradient(var(--rail), var(--rail)); background-position: left center; background-repeat: no-repeat; background-size: 2px 100%; color: var(--content); font-size: 13px; line-height: 17px; text-align: left; }
   .row[hidden] { display: none; }
@@ -175,7 +176,7 @@ const events = [
     .nearterm-capsule { padding-inline: 10px; }
     .nearterm-controls { align-items: flex-start; }
     .count-controls { align-items: flex-end; flex-direction: column; gap: 6px; }
-    .popover { width: min(360px, calc(100vw - 42px)); padding: 26px 22px; border-radius: 10px; }
+    .popover { width: 100%; padding: 26px 22px; border-radius: 10px; }
     .summary { white-space: normal; }
   }
 </style>
