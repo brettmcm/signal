@@ -1,0 +1,181 @@
+---
+import CapsuleFrame from "../../../components/CapsuleFrame.astro";
+import { metadata } from "./meta";
+
+const reminders = [
+  "Review Signal draft",
+  "Book dentist appointment",
+  "Order dog food",
+  "Send print files",
+  "Water the patio plants",
+];
+
+const events = [
+  { title: "Design critique", time: "10:30 AM", video: true },
+  { title: "Lunch with Tom", time: "12:00 PM", video: false },
+  { title: "School pickup", time: "3:15 PM", video: false },
+];
+---
+
+<CapsuleFrame metadata={metadata}>
+  <div class="nearterm-capsule" data-nearterm data-theme="dark" data-reminders="3" data-events="2">
+    <div class="nearterm-controls" aria-label="Nearterm display controls">
+      <div class="appearance" role="group" aria-label="Appearance">
+        <button type="button" data-mode="light" aria-label="Use light appearance" aria-pressed="false">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="2.4"/><path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3 3l1.1 1.1M11.9 11.9 13 13M13 3l-1.1 1.1M4.1 11.9 3 13"/></svg>
+        </button>
+        <button type="button" data-mode="dark" aria-label="Use dark appearance" aria-pressed="true">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M12.7 10.7A6 6 0 0 1 5.3 3.3 5.5 5.5 0 1 0 12.7 10.7Z"/></svg>
+        </button>
+      </div>
+
+      <div class="count-controls">
+        <div class="stepper" data-stepper="reminders">
+          <span>Tasks</span>
+          <button type="button" data-change="-1" aria-label="Show one fewer task">−</button>
+          <output aria-live="polite">3</output>
+          <button type="button" data-change="1" aria-label="Show one more task">+</button>
+        </div>
+        <div class="stepper" data-stepper="events">
+          <span>Events</span>
+          <button type="button" data-change="-1" aria-label="Show one fewer event">−</button>
+          <output aria-live="polite">2</output>
+          <button type="button" data-change="1" aria-label="Show one more event">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="popover" aria-label="Interactive Nearterm menu bar app">
+      <header class="panel-header">
+        <p><strong>Friday</strong><span>August 14, 2026</span></p>
+      </header>
+
+      <section class="section events-section" aria-label="Events remaining today">
+        <p class="summary has-items">You have <strong data-event-summary>2 events</strong> remaining today</p>
+        <p class="summary empty"><span class="cup" aria-hidden="true">♨</span> You have <strong>no events</strong> remaining today</p>
+        <div class="rows">
+          {events.map((event, index) => (
+            <div class="row event-row" data-event-index={index}>
+              <span class="row-icon" aria-hidden="true">{event.video ? "◆" : "◌"}</span>
+              <span>{event.title} at <strong>{event.time}</strong></span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="section reminders-section" aria-label="Tasks today">
+        <p class="summary has-items">You have <strong data-reminder-summary>3 tasks</strong> today</p>
+        <p class="summary empty"><span class="check" aria-hidden="true">●</span> You have <strong>no tasks</strong> today</p>
+        <div class="rows">
+          {reminders.map((reminder, index) => (
+            <button class="row reminder-row" type="button" data-reminder-index={index} aria-pressed="false">
+              <span class="row-icon circle" aria-hidden="true"></span>
+              <span>{reminder}</span>
+            </button>
+          ))}
+        </div>
+      </section>
+    </div>
+  </div>
+</CapsuleFrame>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-nearterm]").forEach((capsule) => {
+    if (capsule.dataset.ready === "true") return;
+    capsule.dataset.ready = "true";
+
+    const limits = { reminders: 5, events: 3 } as const;
+    const singular = { reminders: "task", events: "event" } as const;
+
+    const render = (kind: "reminders" | "events") => {
+      const value = Number(capsule.dataset[kind] ?? 0);
+      const section = capsule.querySelector<HTMLElement>(`.${kind}-section`);
+      const rows = [...(section?.querySelectorAll<HTMLElement>(`[data-${kind === "reminders" ? "reminder" : "event"}-index]`) ?? [])];
+      rows.forEach((row, index) => { row.hidden = index >= value; });
+      section?.classList.toggle("is-empty", value === 0);
+      const output = capsule.querySelector<HTMLOutputElement>(`[data-stepper="${kind}"] output`);
+      if (output) output.value = String(value);
+      const summary = capsule.querySelector<HTMLElement>(`[data-${kind === "reminders" ? "reminder" : "event"}-summary]`);
+      if (summary) summary.textContent = `${value} ${singular[kind]}${value === 1 ? "" : "s"}`;
+      capsule.querySelectorAll<HTMLButtonElement>(`[data-stepper="${kind}"] button`).forEach((button) => {
+        const next = value + Number(button.dataset.change);
+        button.disabled = next < 0 || next > limits[kind];
+      });
+    };
+
+    capsule.querySelectorAll<HTMLButtonElement>("[data-mode]").forEach((button) => {
+      button.addEventListener("click", () => {
+        capsule.dataset.theme = button.dataset.mode;
+        capsule.querySelectorAll<HTMLButtonElement>("[data-mode]").forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+      });
+    });
+
+    capsule.querySelectorAll<HTMLButtonElement>("[data-stepper] button").forEach((button) => {
+      button.addEventListener("click", () => {
+        const stepper = button.closest<HTMLElement>("[data-stepper]");
+        const kind = stepper?.dataset.stepper as "reminders" | "events";
+        capsule.dataset[kind] = String(Math.min(limits[kind], Math.max(0, Number(capsule.dataset[kind]) + Number(button.dataset.change))));
+        render(kind);
+      });
+    });
+
+    capsule.querySelectorAll<HTMLButtonElement>(".reminder-row").forEach((row) => {
+      row.addEventListener("click", () => {
+        const complete = row.getAttribute("aria-pressed") !== "true";
+        row.setAttribute("aria-pressed", String(complete));
+        row.classList.toggle("complete", complete);
+      });
+    });
+
+    render("reminders");
+    render("events");
+  });
+</script>
+
+<style>
+  .nearterm-capsule { --panel-bg: #000; --primary: #dbdbdb; --secondary: #a8a8a8; --tertiary: #6e6e6e; --content: #6e6e6e; --rail: rgb(161 161 161 / 15%); --control-bg: #0b0d10; display: grid; justify-items: center; gap: 22px; padding: 24px 18px 32px; overflow: hidden; background: var(--surface-subtle); font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  .nearterm-capsule[data-theme="light"] { --panel-bg: #fff; --primary: #1c1c1c; --secondary: #6e6e6e; --tertiary: #6e6e6e; --content: #1c1c1c; --rail: rgb(161 161 161 / 15%); }
+  .nearterm-controls { width: min(100%, 360px); display: flex; align-items: center; justify-content: space-between; gap: 14px; color: var(--muted); font: 500 10px/14px var(--font-ui); }
+  .appearance, .count-controls, .stepper { display: flex; align-items: center; }
+  .appearance { gap: 2px; padding: 2px; border-radius: 6px; background: var(--surface); }
+  .appearance button, .stepper button { border: 0; background: transparent; color: var(--tertiary); cursor: pointer; }
+  .appearance button { width: 26px; height: 24px; display: grid; place-items: center; border-radius: 4px; }
+  .appearance button[aria-pressed="true"] { background: var(--interaction); color: var(--canvas); }
+  .appearance svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.25; }
+  .appearance svg circle { fill: none; }
+  .count-controls { gap: 13px; }
+  .stepper { gap: 5px; }
+  .stepper > span { margin-right: 2px; color: var(--tertiary); }
+  .stepper button { width: 20px; height: 20px; border-radius: 4px; font-size: 13px; line-height: 1; }
+  .stepper button:hover:not(:disabled), .stepper button:focus-visible { background: var(--surface); color: var(--interaction); }
+  .stepper button:disabled { cursor: default; opacity: .25; }
+  .stepper output { min-width: 9px; color: var(--interaction); text-align: center; }
+  .popover { position: relative; width: 360px; height: 422px; padding: 32px; border-radius: 12px; background: var(--panel-bg); box-shadow: 0 18px 46px rgb(0 0 0 / 24%), 0 2px 8px rgb(0 0 0 / 18%); color: var(--primary); transition: background-color 180ms ease, color 180ms ease; }
+  .panel-header { display: flex; align-items: center; }
+  .panel-header p { display: flex; gap: 4px; margin: 0; color: var(--primary); font-size: 13px; line-height: 17px; }
+  .panel-header strong, .summary strong, .row strong { font-weight: 600; }
+  .section { margin-top: 32px; }
+  .summary { display: flex; align-items: center; gap: 4px; color: var(--tertiary); font-size: 13px; line-height: 17px; white-space: nowrap; }
+  .summary strong { color: var(--primary); }
+  .summary.empty { display: none; }
+  .section.is-empty .summary.has-items, .section.is-empty .rows { display: none; }
+  .section.is-empty .summary.empty { display: flex; }
+  .cup, .check { width: 14px; color: var(--secondary); font-size: 12px; text-align: center; }
+  .rows { display: grid; gap: 8px; margin-top: 12px; }
+  .row { min-height: 20px; display: grid; grid-template-columns: 20px minmax(0,1fr); align-items: center; gap: 4px; padding: 2px 0 2px 12px; background-image: linear-gradient(var(--rail), var(--rail)); background-position: left center; background-repeat: no-repeat; background-size: 2px 100%; color: var(--content); font-size: 13px; line-height: 17px; text-align: left; }
+  .row[hidden] { display: none; }
+  .row-icon { width: 20px; color: inherit; text-align: center; font-size: 11px; }
+  .reminder-row { width: 100%; border: 0; background-color: transparent; cursor: pointer; font-weight: 400; }
+  .circle { width: 13px; height: 13px; margin-left: 3px; border: 1.25px solid currentColor; border-radius: 50%; }
+  .reminder-row:hover { color: var(--secondary); }
+  .nearterm-capsule[data-theme="light"] .reminder-row:hover { color: #000; }
+  .reminder-row.complete > :last-child { text-decoration: line-through; opacity: .56; }
+  .reminder-row.complete .circle { border-color: var(--primary); background: var(--primary); box-shadow: inset 0 0 0 3px var(--panel-bg); }
+  @media (max-width: 440px) {
+    .nearterm-capsule { padding-inline: 10px; }
+    .nearterm-controls { align-items: flex-start; }
+    .count-controls { align-items: flex-end; flex-direction: column; gap: 6px; }
+    .popover { width: min(360px, calc(100vw - 42px)); padding: 26px 22px; border-radius: 10px; }
+    .summary { white-space: normal; }
+  }
+</style>

@@ -1,0 +1,35 @@
+---
+signalNumber: 6
+title: "Disposable apps, durable data"
+description: "Nearterm is a personal interface over the Apple services I already trust."
+publishedAt: 2026-08-14
+tags:
+  - Tools
+  - Design
+  - AI
+featured: true
+---
+
+import NeartermPanel from "../../capsules/006/01/index.astro";
+
+I keep building apps for problems I have technically already solved.
+
+My reminders are in Apple Reminders. My time is in Apple Calendar. Both sync everywhere, survive new devices, understand recurrence, and have years of quiet infrastructure behind them. The responsible thing would be to stop there.
+
+But I do not want to interact with a general-purpose reminder list every time I need to understand my day. I want a small thing in my menu bar that tells me what is left, puts events and tasks in one sequence, and then gets out of the way.
+
+So I made Nearterm.
+
+<NeartermPanel />
+
+Nearterm does not own anything. It is a 360-point opinion laid over services I already trust. Complete a task there and it is completed in Reminders. Reschedule it and the date changes in Reminders. Calendar remains Calendar. If I stop maintaining Nearterm tomorrow, I lose an interface. I do not lose my life.
+
+That separation feels intoxicating.
+
+For most of software history, making a new app also meant accepting responsibility for accounts, databases, sync, recovery, permissions, and every strange little edge where durable software earns the name. It made an interface expensive. Once the interface is personal enough to have an audience of one, the math stops working entirely.
+
+AI changes that math, but the stable layer is what makes it useful. I can spend my time deciding that the type should be 13 points, that today’s events belong above today’s tasks, and that the whole thing should be black, white, and quiet. Apple can keep worrying about whether a recurring reminder appears on my phone after I edit it on my Mac (thank god).
+
+The app becomes less like a permanent container and more like a lens. I can change it when my habits change. I can make another lens for another context. I can throw one away without planning a migration.
+
+I used to think personal software meant owning the whole stack. Now I think it might mean knowing which parts I have no interest in owning.
