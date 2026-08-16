@@ -176,6 +176,21 @@ input {
   padding: var(--gutter);
 }
 
+.site-rss {
+  margin-left: auto;
+  color: var(--tertiary);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color var(--fast);
+}
+
+.site-rss:hover {
+  color: var(--interaction);
+}
+
 .site-header {
   min-height: 72px;
 }

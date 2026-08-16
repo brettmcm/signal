@@ -57,6 +57,7 @@ const socialImage = image ? new URL(image, Astro.site) : undefined;
           {article && <span class="site-back-indicator" aria-hidden="true">←</span>}
           <span>{article ? "Index" : "Signal"}</span>
         </a>
+        <a class="site-rss" href="/rss.xml">RSS</a>
       </header>
       <main id="main-content">
         <slot />

@@ -9,17 +9,23 @@
     "build": "npm run prepare:signals && ASTRO_TELEMETRY_DISABLED=1 astro build",
     "preview": "npm run prepare:signals && ASTRO_TELEMETRY_DISABLED=1 astro preview",
     "check": "ASTRO_TELEMETRY_DISABLED=1 astro check",
+    "test": "vitest run",
     "deploy": "vercel --prod"
   },
   "dependencies": {
     "@astrojs/mdx": "latest",
     "@astrojs/rss": "latest",
     "@astrojs/sitemap": "latest",
-    "astro": "latest"
+    "astro": "latest",
+    "marked": "^16.2.1",
+    "sanitize-html": "^2.17.0"
   },
   "devDependencies": {
     "@astrojs/check": "latest",
+    "@types/sanitize-html": "^2.16.0",
+    "fast-xml-parser": "^5.2.5",
     "typescript": "latest",
-    "vercel": "latest"
+    "vercel": "latest",
+    "vitest": "^3.2.4"
   }
 }

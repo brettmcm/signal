@@ -1,14 +1,14 @@
 ---
 import { render } from "astro:content";
-import BaseLayout from "../layouts/BaseLayout.astro";
-import { getPublishedSignals, signalPath } from "../lib/signals";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getPublishedSignals } from "../../lib/signals";
 
 export const prerender = true;
 
 export async function getStaticPaths() {
   const signals = await getPublishedSignals();
   return signals.map((signal) => ({
-    params: { slug: signalPath(signal).slice(1, -1) },
+    params: { slug: signal.id.replace(/\.(md|mdx)$/, "") },
     props: { signal },
   }));
 }

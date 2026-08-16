@@ -11,9 +11,10 @@ const signals = defineCollection({
     publishedAt: z.coerce.date(),
     updatedAt: z.coerce.date().optional(),
     tags: z.array(z.string()).default([]),
-    draft: z.boolean().default(false),
+    status: z.enum(["draft", "published"]).default("published"),
     featured: z.boolean().default(false),
     image: z.string().optional(),
+    canonical: z.url().optional(),
   }),
 });
 

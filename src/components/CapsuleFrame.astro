@@ -16,6 +16,7 @@ const label = capsuleLabel(metadata);
   {label}
 </p>
 <aside
+  id={`capsule-${metadata.signalNumber}-${metadata.capsuleNumber}`}
   class="signal-capsule"
   aria-label={metadata.title ? `${label}: ${metadata.title}` : label}
   data-capsule

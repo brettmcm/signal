@@ -1,5 +1,13 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "astro",
-  "trailingSlash": true
+  "trailingSlash": true,
+  "redirects": [
+    { "source": "/introducing-signal/", "destination": "/signals/introducing-signal/", "permanent": true },
+    { "source": "/rejecting-the-machine/", "destination": "/signals/rejecting-the-machine/", "permanent": true },
+    { "source": "/dopamine-hits/", "destination": "/signals/dopamine-hits/", "permanent": true },
+    { "source": "/a-layer-called-scope/", "destination": "/signals/a-layer-called-scope/", "permanent": true },
+    { "source": "/minimal-by-subtraction/", "destination": "/signals/minimal-by-subtraction/", "permanent": true },
+    { "source": "/disposable-apps-durable-data/", "destination": "/signals/disposable-apps-durable-data/", "permanent": true }
+  ]
 }

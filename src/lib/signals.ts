@@ -1,4 +1,5 @@
 import { getCollection, type CollectionEntry } from "astro:content";
+import { isPublishedSignalData } from "./signal-data";
 
 export type Signal = CollectionEntry<"signals">;
 export type NumberedSignal = Signal & {
@@ -6,7 +7,10 @@ export type NumberedSignal = Signal & {
 };
 
 export async function getPublishedSignals() {
-  const signals = await getCollection("signals", ({ data }) => !data.draft);
+  const signals = await getCollection(
+    "signals",
+    ({ data }) => isPublishedSignalData(data),
+  );
 
   const duplicateNumbers = signals
     .map((signal) => signal.data.signalNumber)
@@ -25,9 +29,13 @@ export async function getPublishedSignals() {
       ...signal,
       signalNumber: String(signal.data.signalNumber).padStart(3, "0"),
     }))
-    .sort((a, b) => b.data.signalNumber - a.data.signalNumber);
+    .sort(
+      (a, b) =>
+        b.data.publishedAt.getTime() - a.data.publishedAt.getTime() ||
+        b.data.signalNumber - a.data.signalNumber,
+    );
 }
 
 export function signalPath(signal: Signal) {
-  return `/${signal.id.replace(/\.(md|mdx)$/, "")}/`;
+  return `/signals/${signal.id.replace(/\.(md|mdx)$/, "")}/`;
 }

@@ -6,7 +6,7 @@ writing, and standalone HTML artifacts.
 ## Write a public signal
 
 Create an `.md` or `.mdx` file in `src/content/signals`. The filename becomes
-the public URL.
+the public URL under `/signals/`.
 
 ```md
 ---
@@ -16,7 +16,7 @@ description: "A concise description."
 publishedAt: 2026-07-29
 tags:
   - Design
-draft: false
+status: published
 ---
 
 Write here.
@@ -58,6 +58,10 @@ npm run dev
 ```
 
 Run `npm run build` for the production build.
+
+The full-content RSS feed is generated from the same published collection at
+`/rss.xml`. Interactive Capsules are replaced with links back to their Signal
+page so feed readers receive complete, portable article content.
 
 ## Deploy with Vercel
 

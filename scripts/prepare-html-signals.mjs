@@ -13,6 +13,7 @@ await cp(
   resolve(root, "src/assets/DepartureMono-Regular.woff"),
   resolve(target, "fonts/DepartureMono-Regular.woff"),
 );
+await cp(resolve(root, "src/assets/rss.xsl"), resolve(target, "rss.xsl"));
 
 for (const slug of publicSignals) {
   if (!/^[a-z0-9][a-z0-9-]*$/.test(slug)) {
