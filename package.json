@@ -10,20 +10,28 @@
     "preview": "npm run prepare:signals && ASTRO_TELEMETRY_DISABLED=1 astro preview",
     "check": "ASTRO_TELEMETRY_DISABLED=1 astro check",
     "test": "vitest run",
+    "studio:capsules": "remotion studio remotion/index.ts --no-open",
+    "render:nearterm": "remotion render remotion/index.ts Nearterm-006-01 src/assets/capsules/006/01/nearterm.mp4 --codec=h264 --crf=24 --pixel-format=yuv420p",
+    "poster:nearterm": "remotion still remotion/index.ts Nearterm-006-01 src/assets/capsules/006/01/nearterm-poster.jpg --frame=200 --image-format=jpeg --jpeg-quality=90",
     "deploy": "vercel --prod"
   },
   "dependencies": {
     "@astrojs/mdx": "latest",
+    "@astrojs/react": "^6.0.2",
     "@astrojs/rss": "latest",
     "@astrojs/sitemap": "latest",
     "astro": "latest",
     "marked": "^16.2.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "sanitize-html": "^2.17.0"
   },
   "devDependencies": {
     "@astrojs/check": "latest",
+    "@remotion/cli": "^4.0.506",
     "@types/sanitize-html": "^2.16.0",
     "fast-xml-parser": "^5.2.5",
+    "remotion": "^4.0.506",
     "typescript": "latest",
     "vercel": "latest",
     "vitest": "^3.2.4"

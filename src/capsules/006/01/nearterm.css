@@ -1,0 +1,58 @@
+.nearterm-capsule {
+  --nt-panel-bg: #000;
+  --nt-primary: #dbdbdb;
+  --nt-secondary: #a8a8a8;
+  --nt-tertiary: #6e6e6e;
+  --nt-content: #6e6e6e;
+  --nt-rail: rgb(161 161 161 / 15%);
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  justify-items: center;
+  gap: 22px;
+  padding: 24px 18px 32px;
+  overflow: hidden;
+  background: var(--surface-subtle, #050607);
+  color: var(--ink, #d1d5db);
+  font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.nearterm-capsule[data-theme="light"] { --nt-panel-bg: #fff; --nt-primary: #1c1c1c; --nt-secondary: #6e6e6e; --nt-tertiary: #6e6e6e; --nt-content: #1c1c1c; }
+.nearterm-controls { width: 100%; max-width: 360px; min-width: 0; display: flex; align-items: center; justify-content: space-between; gap: 14px; color: var(--muted, #9299a3); font: 500 10px/14px Inter, ui-sans-serif, system-ui, sans-serif; }
+.nt-appearance, .nt-count-controls, .nt-stepper { display: flex; align-items: center; }
+.nt-appearance { gap: 2px; padding: 2px; border-radius: 6px; background: var(--surface, #0b0d10); }
+.nt-appearance button, .nt-stepper button { border: 0; background: transparent; color: var(--nt-tertiary); cursor: pointer; }
+.nt-appearance button { width: 26px; height: 24px; display: grid; place-items: center; border-radius: 4px; }
+.nt-appearance button[aria-pressed="true"] { background: var(--interaction, #fff); color: var(--canvas, #000); }
+.nt-appearance svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.25; }
+.nt-count-controls { gap: 13px; }
+.nt-stepper { gap: 5px; }
+.nt-stepper > span { margin-right: 2px; color: var(--nt-tertiary); }
+.nt-stepper button { width: 20px; height: 20px; border-radius: 4px; font-size: 13px; line-height: 1; }
+.nt-stepper button:hover:not(:disabled), .nt-stepper button:focus-visible { background: var(--surface, #0b0d10); color: var(--interaction, #fff); }
+.nt-stepper button:disabled { cursor: default; opacity: .25; }
+.nt-stepper output { min-width: 9px; color: var(--interaction, #fff); text-align: center; }
+.nt-popover { position: relative; width: 100%; max-width: 360px; height: 422px; padding: 32px; border-radius: 12px; background: var(--nt-panel-bg); box-shadow: 0 18px 46px rgb(0 0 0 / 24%), 0 2px 8px rgb(0 0 0 / 18%); color: var(--nt-primary); }
+.nt-panel-header { display: flex; align-items: center; }
+.nt-panel-header p { display: flex; gap: 4px; margin: 0; color: var(--nt-primary); font-size: 13px; line-height: 17px; }
+.nt-panel-header strong, .nt-summary strong, .nt-row strong { font-weight: 600; }
+.nt-section { margin-top: 32px; }
+.nt-summary { display: flex; align-items: center; gap: 4px; margin: 0; color: var(--nt-tertiary); font-size: 13px; line-height: 17px; white-space: nowrap; }
+.nt-summary strong { color: var(--nt-primary); }
+.nt-cup, .nt-check { width: 14px; flex: 0 0 14px; color: var(--nt-secondary); font-size: 12px; text-align: center; }
+.nt-cup svg { width: 14px; height: 14px; display: block; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.15; }
+.nt-rows { display: grid; gap: 8px; margin-top: 12px; }
+.nt-row { min-height: 20px; display: grid; grid-template-columns: 20px minmax(0, 1fr); align-items: center; gap: 4px; padding: 2px 0 2px 12px; background-image: linear-gradient(var(--nt-rail), var(--nt-rail)); background-position: left center; background-repeat: no-repeat; background-size: 2px 100%; color: var(--nt-content); font-size: 13px; line-height: 17px; text-align: left; }
+.nt-row-icon { width: 20px; color: inherit; text-align: center; font-size: 11px; }
+.nt-reminder-row { width: 100%; border: 0; background-color: transparent; cursor: pointer; font-weight: 400; }
+.nt-circle { width: 13px; height: 13px; margin-left: 3px; border: 1.25px solid currentColor; border-radius: 50%; }
+.nt-reminder-row:hover { color: var(--nt-secondary); }
+.nearterm-capsule[data-theme="light"] .nt-reminder-row:hover { color: #000; }
+.nt-reminder-row.is-complete > :last-child { text-decoration: line-through; opacity: .56; }
+.nt-reminder-row.is-complete .nt-circle { border-color: var(--nt-primary); background: var(--nt-primary); box-shadow: inset 0 0 0 3px var(--nt-panel-bg); }
+@media (max-width: 440px) {
+  .nearterm-capsule { padding-inline: 10px; }
+  .nearterm-controls { align-items: flex-start; }
+  .nt-count-controls { align-items: flex-end; flex-direction: column; gap: 6px; }
+  .nt-popover { width: 100%; padding: 26px 22px; border-radius: 10px; }
+  .nt-summary { white-space: normal; }
+}

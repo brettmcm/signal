@@ -15,6 +15,11 @@ const signals = defineCollection({
     featured: z.boolean().default(false),
     image: z.string().optional(),
     canonical: z.url().optional(),
+    capsuleMedia: z.object({
+      url: z.string().startsWith("/"),
+      poster: z.string().startsWith("/"),
+      type: z.literal("video/mp4"),
+    }).optional(),
   }),
 });
 

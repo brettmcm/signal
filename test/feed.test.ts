@@ -57,7 +57,9 @@ const safe = "<xml> & more";
 <DemoPanel />
 `;
     const pageUrl = new URL("https://signal.brettmcm.com/signals/demo/");
-    const html = renderFeedContent(source, pageUrl);
+    const html = renderFeedContent(source, pageUrl, {
+      posterUrl: new URL("https://signal.brettmcm.com/capsules/007/02/poster.jpg"),
+    });
 
     expect(html).toContain("<h2>Tools &amp; craft</h2>");
     expect(html).toContain('href="https://signal.brettmcm.com/about/"');
@@ -66,6 +68,9 @@ const safe = "<xml> & more";
     expect(html).toContain("<pre><code");
     expect(html).toContain(
       'href="https://signal.brettmcm.com/signals/demo/#capsule-007-02"',
+    );
+    expect(html).toContain(
+      'src="https://signal.brettmcm.com/capsules/007/02/poster.jpg"',
     );
     expect(html).not.toContain("import DemoPanel");
     expect(html).not.toContain("<DemoPanel");

@@ -4,6 +4,10 @@ import sanitizeHtml from "sanitize-html";
 
 export const FEED_LIMIT = 50;
 
+type FeedContentOptions = {
+  posterUrl?: URL;
+};
+
 type FeedSignal = {
   id: string;
   signalNumber: string;
@@ -37,7 +41,11 @@ export async function getSignalSource(signal: SourceSignal) {
   throw new Error(`Signal ${signal.id} has no readable MDX source`);
 }
 
-export function renderFeedContent(source: string, pageUrl: URL) {
+export function renderFeedContent(
+  source: string,
+  pageUrl: URL,
+  options: FeedContentOptions = {},
+) {
   const componentLinks = new Map<string, string>();
   const withoutImports = source.replace(
     /^import\s+([A-Z][\w]*)\s+from\s+["'][^"']*\/capsules\/(\d+)\/(\d+)\/index\.astro["'];?\s*$/gm,
@@ -53,9 +61,13 @@ export function renderFeedContent(source: string, pageUrl: URL) {
   let feedMarkdown = withoutImports;
   for (const [component, anchor] of componentLinks) {
     const componentPattern = new RegExp(`<${component}\\b[^>]*\\/>`, "g");
+    const capsuleUrl = new URL(`#${anchor}`, pageUrl).href;
+    const preview = options.posterUrl
+      ? `[![Interactive Capsule preview](${options.posterUrl.href})](${capsuleUrl})\n\n`
+      : "";
     feedMarkdown = feedMarkdown.replace(
       componentPattern,
-      `\n\n[View the interactive capsule on Signal](${new URL(`#${anchor}`, pageUrl).href})\n\n`,
+      `\n\n${preview}[View the interactive capsule on Signal](${capsuleUrl})\n\n`,
     );
   }
 
