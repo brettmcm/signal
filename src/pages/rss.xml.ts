@@ -20,7 +20,7 @@ export async function GET(context: { site: URL }) {
   );
 
   return rss({
-    title: "Signal from @brettmcm",
+    title: "signal.brettmcm",
     description: "Thoughts, experiments, writing, and useful artifacts.",
     site: context.site,
     stylesheet: "/rss.xsl",
